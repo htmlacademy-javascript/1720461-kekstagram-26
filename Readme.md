@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Станислав Базаров](https://up.htmlacademy.ru/javascript/26/user/1720461).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Елькин](https://htmlacademy.ru/profile/alex_elkin).
 
 ---
 
