@@ -21,3 +21,5 @@ function hasAllowedStringLength(string, maxLength) {
 
 hasAllowedStringLength('Стас, ты молодец!', 17);
 getRandomNumber(1, 100);
+
+
