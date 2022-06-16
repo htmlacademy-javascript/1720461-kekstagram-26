@@ -47,7 +47,7 @@ const DESCRIPTION = [
   'мама раньше запрещала мне смотреть это'
 ];
 
-
+const ITERATION_COUNT = 25;
 const commentsArray = [];
 const generatedArray = [];
 
@@ -65,6 +65,7 @@ function getRandomArrayElement (array) {
   return array[getRandomNumber(0, array.length - 1)];
 }
 
+/* функция создает массив комментариев */
 function createCommentsArray (count) {
   for (let i = 1; i <= count; i++) {
     commentsArray.push({
@@ -77,6 +78,7 @@ function createCommentsArray (count) {
   return commentsArray;
 }
 
+/* функция создает основной массив данных и добавляет туда массив комментариев */
 function createMainArray (count) {
   for (let i = 1; i <= count; i++) {
     generatedArray.push({
@@ -85,15 +87,18 @@ function createMainArray (count) {
       description: getRandomArrayElement(DESCRIPTION),
       likes: getRandomNumber(15, 200),
       comments: commentsArray[i - 1]
-  })
+    });
   }
   return generatedArray;
 }
 
+function runGeneration () {
+  createCommentsArray(ITERATION_COUNT);
+  createMainArray(ITERATION_COUNT);
+  return generatedArray;
+}
 
-let consoleVar1 = createCommentsArray(25)
-let consoleVar2 = createMainArray(25)
-console.log(consoleVar2)
+runGeneration();
 
 
 /*
