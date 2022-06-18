@@ -13,13 +13,19 @@ function hasAllowedStringLength(string, maxLength) {
 hasAllowedStringLength('Стас, ты молодец!', 17);
 */
 
+
+/* создаем данные для генерации */
 const COMMENT_MESSAGE = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
+  'В целом всё плохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
+  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
+  'Эти улыбающиеся люди на фото выглядят довольно стремно...',
+  'Это фото подойдет для семейного альбома, но зачем нужно было выкладывать ее на всеобщее обозрение?!',
+  'Вы точно хотите стать фотографом?'
 ];
 
 const COMMENT_NAME = [
@@ -28,28 +34,35 @@ const COMMENT_NAME = [
   'Одаренный чувак',
   'Диванный эксперт',
   'Вдумчивый комментатор',
-  'Квантовый анализатор',
-  'Иностранный шпион',
+  'Иностранный агент',
   'Просветленный мудрец',
-  'Терпеливый агитатор'
+  'Терпеливый агитатор',
+  'Токсичный воин',
+  'Наглец, на дуде игрец',
+  'Чел, который всех бесит',
+  'Накидывает на вентилятор'
 ];
 
 const DESCRIPTION = [
   'глаза мои б этого не видели',
-  'описание рандомной фотографии',
+  'будь я на 20 лет моложе, то наверное начал бы завидовать',
   'сложно описывать то, чего не видишь',
-  'и это тоже описание',
+  'это описание могло не появиться на свет, но ему повезло',
   'спрячь это и не показывай другим',
-  'еще одно описание',
+  'это не повод творить такое!',
   'а это рандомное описание №7 для рандомной фотки',
   'увидел бы это раньше, то поступил бы по-другому',
   'еще одно случайное описание фотографии',
-  'мама раньше запрещала мне смотреть это'
+  'мама раньше запрещала мне смотреть это',
+  'пройдут года, и вы будете жалеть об этом'
 ];
 
+
+/* создаем константу, счетчик и пустые массивы */
 const ITERATION_COUNT = 25;
-const commentsArray = [];
-const generatedArray = [];
+const generatedPicturesArray = [];
+let commentsArray = [];
+let counterForID = 1;
 
 
 /* функция выбирает случайное число из заданного диапазона */
@@ -60,45 +73,53 @@ function getRandomNumber(minNumber, maxNumber) {
   throw new Error ('Введены отрицательные числа');
 }
 
+
 /* функция выбирает случайный элемент из заданного массива */
 function getRandomArrayElement (array) {
   return array[getRandomNumber(0, array.length - 1)];
 }
 
-/* функция создает массив комментариев */
-function createCommentsArray (count) {
-  for (let i = 1; i <= count; i++) {
+
+/* функция создает массив комментариев для одной картинки */
+function createCommentsForOnePicture () {
+  const numberOfCommentIterations  = getRandomNumber(1, 3);
+  for (let j = 1; j <= numberOfCommentIterations; j++) {
     commentsArray.push({
-      id: i,
+      id: counterForID,
       avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
       message: getRandomArrayElement(COMMENT_MESSAGE),
       name: getRandomArrayElement(COMMENT_NAME)
     });
+    counterForID += 1;
   }
   return commentsArray;
 }
 
-/* функция создает основной массив данных и добавляет туда массив комментариев */
-function createMainArray (count) {
+
+/* функция создает одну картинку и добавляет массив комментариев */
+function createOnePictureItem (id) {
+  return ({
+    id,
+    url: `photos/${id}.jpg`,
+    description: getRandomArrayElement(DESCRIPTION),
+    likes: getRandomNumber(15, 200),
+    comments: commentsArray
+  });
+}
+
+
+/* функция создает массив картинок с комментариями */
+function generatePicturesArray (count) {
   for (let i = 1; i <= count; i++) {
-    generatedArray.push({
-      id: i,
-      url: `photos/${i}.jpg`,
-      description: getRandomArrayElement(DESCRIPTION),
-      likes: getRandomNumber(15, 200),
-      comments: commentsArray[i - 1]
-    });
+    createCommentsForOnePicture();
+    generatedPicturesArray.push(createOnePictureItem(i));
+    commentsArray = [];
   }
-  return generatedArray;
+  return generatedPicturesArray;
 }
 
-function runGeneration () {
-  createCommentsArray(ITERATION_COUNT);
-  createMainArray(ITERATION_COUNT);
-  return generatedArray;
-}
 
-runGeneration();
+generatePicturesArray(ITERATION_COUNT);
 
 
 /* Структура каждого объекта должна быть следующей:
