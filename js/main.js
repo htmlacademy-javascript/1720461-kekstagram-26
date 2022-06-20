@@ -85,12 +85,11 @@ function createCommentsForOnePicture () {
   const numberOfCommentIterations  = getRandomNumber(1, 3);
   for (let j = 1; j <= numberOfCommentIterations; j++) {
     commentsArray.push({
-      id: counterForID,
+      id: counterForID++,
       avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
       message: getRandomArrayElement(COMMENT_MESSAGE),
       name: getRandomArrayElement(COMMENT_NAME)
     });
-    counterForID += 1;
   }
   return commentsArray;
 }
