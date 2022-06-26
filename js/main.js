@@ -28,6 +28,7 @@ const COMMENT_MESSAGE = [
   'Вы точно хотите стать фотографом?'
 ];
 
+
 const COMMENT_NAME = [
   'Неопознанный Кекс',
   'Лосняшийся Енот',
@@ -42,6 +43,7 @@ const COMMENT_NAME = [
   'Чел, который всех бесит',
   'Накидывает на вентилятор'
 ];
+
 
 const DESCRIPTION = [
   'глаза мои б этого не видели',
@@ -58,10 +60,9 @@ const DESCRIPTION = [
 ];
 
 
-/* создаем константу, счетчик и пустые массивы */
+/* создаем константу, счетчик и пустой массив */
 const ITERATION_COUNT = 25;
 const generatedPicturesArray = [];
-let commentsArray = [];
 let counterForID = 1;
 
 
@@ -80,29 +81,25 @@ function getRandomArrayElement (array) {
 }
 
 
-/* функция создает массив комментариев для одной картинки */
-function createCommentsForOnePicture () {
-  const numberOfCommentIterations  = getRandomNumber(1, 3);
-  for (let j = 1; j <= numberOfCommentIterations; j++) {
-    commentsArray.push({
-      id: counterForID++,
-      avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
-      message: getRandomArrayElement(COMMENT_MESSAGE),
-      name: getRandomArrayElement(COMMENT_NAME)
-    });
-  }
-  return commentsArray;
+/* функция создает один комментарий */
+function createComment () {
+  return {
+    id: counterForID++,
+    avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
+    message: getRandomArrayElement(COMMENT_MESSAGE),
+    name: getRandomArrayElement(COMMENT_NAME)
+  };
 }
 
 
-/* функция создает одну картинку и добавляет массив комментариев */
+/* функция создает одну картинку и добавляет случайное количество комментариев (от 1 до 5) */
 function createOnePictureItem (id) {
   return ({
     id,
     url: `photos/${id}.jpg`,
     description: getRandomArrayElement(DESCRIPTION),
     likes: getRandomNumber(15, 200),
-    comments: commentsArray
+    comments: Array.from({length: getRandomNumber(1, 5)}, createComment)
   });
 }
 
@@ -110,9 +107,7 @@ function createOnePictureItem (id) {
 /* функция создает массив картинок с комментариями */
 function generatePicturesArray (count) {
   for (let i = 1; i <= count; i++) {
-    createCommentsForOnePicture();
     generatedPicturesArray.push(createOnePictureItem(i));
-    commentsArray = [];
   }
   return generatedPicturesArray;
 }
