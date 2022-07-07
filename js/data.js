@@ -76,8 +76,8 @@ function createOnePictureItem (id) {
 }
 
 
-/* функция создает массив картинок с необходимым количеством итераций*/
-function generatePicturesArray (count) {
+/* функция создает массив картинок с необходимым количеством итераций */
+function generatePicturesDataArray (count) {
   const generatedPicturesArray = [];
   for (let i = 1; i <= count; i++) {
     generatedPicturesArray.push(createOnePictureItem(i));
@@ -86,4 +86,5 @@ function generatePicturesArray (count) {
 }
 
 
-export {generatePicturesArray};
+/* экспортируем необходимую функцию */
+export {generatePicturesDataArray};
