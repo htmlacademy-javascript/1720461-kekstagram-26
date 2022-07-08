@@ -51,6 +51,7 @@ const DESCRIPTION = [
 
 /* создаем счетчик */
 let counterForID = 1;
+const generatedPicturesArray = [];
 
 
 /* функция создает один комментарий */
@@ -78,7 +79,7 @@ function createOnePictureItem (id) {
 
 /* функция создает массив картинок с необходимым количеством итераций */
 function generatePicturesDataArray (count) {
-  const generatedPicturesArray = [];
+
   for (let i = 1; i <= count; i++) {
     generatedPicturesArray.push(createOnePictureItem(i));
   }
@@ -86,5 +87,9 @@ function generatePicturesDataArray (count) {
 }
 
 
-/* экспортируем необходимую функцию */
-export {generatePicturesDataArray};
+/* запускаем функцию */
+generatePicturesDataArray(25);
+
+
+/* экспортируем получившийся массив */
+export {generatedPicturesArray};
