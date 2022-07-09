@@ -15,12 +15,14 @@ function createPhotos () {
   for (let i = 0; i < picturesArray.length; i++) {
     const templateElement = template.cloneNode(true); // копируем новый элемент из шаблона
     const templatePicture = templateElement.querySelector('.picture__img'); // доступ к тегу img
+    const templateDescription = templateElement.querySelector('.picture__img'); // описание
     const templateComments = templateElement.querySelector('.picture__comments'); // количество комментариев
     const templateLikes = templateElement.querySelector('.picture__likes'); // количество лайков
 
     templatePicture.src += picturesArray[i].url; // присваиваем значение пути (url) до картинки
     templateComments.textContent = picturesArray[i].comments.length; // присваиваем значение количества комментариев
     templateLikes.textContent = picturesArray[i].likes; // присваиваем значение количества лайков
+    templateDescription.alt = picturesArray[i].description; // присваиваем значение количества лайков
 
     fragment.appendChild(templateElement); // добавляем элемент в document fragment
   }
