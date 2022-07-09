@@ -26,6 +26,8 @@ function createPhotos () {
   }
 
   picturesContainer.appendChild(fragment); // добавляем document fragment в разметку
+
+  return picturesContainer;
 }
 
 
