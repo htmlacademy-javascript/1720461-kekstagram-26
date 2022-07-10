@@ -93,4 +93,3 @@ generatePicturesDataArray(25);
 
 /* экспортируем получившийся массив */
 export {generatedPicturesArray};
-

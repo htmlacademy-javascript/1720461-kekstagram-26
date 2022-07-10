@@ -22,7 +22,7 @@ function createPhotos () {
     templatePicture.src += picturesArray[i].url; // присваиваем значение пути (url) до картинки
     templateComments.textContent = picturesArray[i].comments.length; // присваиваем значение количества комментариев
     templateLikes.textContent = picturesArray[i].likes; // присваиваем значение количества лайков
-    templateDescription.alt = picturesArray[i].description; // присваиваем значение количества лайков
+    templateDescription.alt = picturesArray[i].description; // присваиваем значение описания
 
     fragment.appendChild(templateElement); // добавляем элемент в document fragment
   }
