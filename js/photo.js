@@ -1,11 +1,7 @@
-/* импортируем необходимую функцию */
-import {generatedPicturesArray} from './data.js';
-
-
 /* функция, создающая HTML-разметку для фотографий на основе данных и добавляющая ее в общую разметку*/
-function createPhotos () {
+function createPhotos (photos) {
 
-  const picturesArray = generatedPicturesArray; // получаем данные
+  const picturesArray = photos; // получаем данные
 
   const picturesContainer = document.querySelector('.pictures'); // контейнер для фото
   const templateFragment = document.querySelector('#picture').content; // шаблон (фрагмент)
@@ -33,5 +29,5 @@ function createPhotos () {
 }
 
 
-/* экспортируем необходимую функцию */
+/* экспортируем функцию в main */
 export {createPhotos};
