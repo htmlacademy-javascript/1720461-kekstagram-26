@@ -1,10 +1,9 @@
 /* импортируем необходимую функцию */
 import {createPhotos} from './photo.js';
+import {generatedPicturesArray} from './data.js';
+import {viewGalleryHandler} from './gallery.js';
 
 
-/* создаем константу c необходимым количеством итераций */
-const ITERATION_COUNT = 25;
-
-
-/* запускаем функцию */
-createPhotos(ITERATION_COUNT);
+/* запускаем функции */
+createPhotos(generatedPicturesArray);
+viewGalleryHandler();
