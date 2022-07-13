@@ -70,15 +70,15 @@ function viewGalleryHandler () {
   /* обработчик события на закрытие галереи */
   overlayCloseButton.addEventListener('click', (evt) => {
     evt.preventDefault();
-    overlay.classList.add('hidden'); // возвращаем все, как было
-    document.body.classList.remove('modal-open');  // возвращаем все, как было
+    overlay.classList.add('hidden'); // возвращаем все, как было (скрываем наложение, возвращаем скролл)
+    document.body.classList.remove('modal-open');  // возвращаем все, как было (скрываем наложение, возвращаем скролл)
   });
 
   /* обработчик события на закрытие галереи (по нажатию кнопки Esc) */
   document.addEventListener('keydown', (evt) => {
     if (evt.key === 'Escape') {
-      overlay.classList.add('hidden'); // возвращаем все, как было
-      document.body.classList.remove('modal-open'); // возвращаем все, как было :)
+      overlay.classList.add('hidden'); // возвращаем все, как было (скрываем наложение, возвращаем скролл)
+      document.body.classList.remove('modal-open'); // возвращаем все, как было (скрываем наложение, возвращаем скролл)
     }
   });
 }
