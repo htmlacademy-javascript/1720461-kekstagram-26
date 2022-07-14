@@ -9,4 +9,3 @@ import {validateForm} from './form.js';
 createPhotos(generatedPicturesArray);
 viewGalleryHandler();
 validateForm();
-

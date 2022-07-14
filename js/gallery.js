@@ -25,6 +25,15 @@ function viewGalleryHandler () {
   const commentCount = overlay.querySelector('.social__comment-count'); // блок счетчика комментариев
   const commentsLoader = overlay.querySelector('.comments-loader'); // кнопка загрузки дополнительных комментариев
 
+  /* функция на закрытие галереи (по нажатию кнопки Esc) */
+  function onOverlayEscKeydown (evt) {
+    if (evt.key === 'Escape') {
+      overlay.classList.add('hidden'); // скрываем наложение
+      document.body.classList.remove('modal-open'); // возвращаем скролл
+      document.removeEventListener('keydown', onOverlayEscKeydown); // убираем обработчик на закрытие окна по кнопке Esc
+    }
+  }
+
   /* обработчик событий на открытие галереи */
   for (let i = 0; i < picturesCollection.length; i++) {
     picturesCollection[i].addEventListener('click', (evt) => {
@@ -44,7 +53,7 @@ function viewGalleryHandler () {
 
       /* добавим условие для удаления всех комментариев перед открытием галереи */
       while (commentsContainer.firstChild) { // пока у элемента commentsContainer существует первый потомок
-        commentsContainer.removeChild(commentsContainer.firstChild); // таким образом, мы удаляем все комментарии
+        commentsContainer.removeChild(commentsContainer.firstChild); // удаляем первого потомка, таким образом, мы удаляем все комментарии
       }
 
       /* цикл для комментариев */
@@ -64,22 +73,17 @@ function viewGalleryHandler () {
         fragment.appendChild(templateElement); // добавляем элемент в document fragment
         commentsContainer.appendChild(fragment); // добавляем document fragment в разметку
       }
+
+      document.addEventListener('keydown', onOverlayEscKeydown); // добавляем обработчик на закрытие окна по кнопке Esc
     });
   }
 
   /* обработчик события на закрытие галереи */
   overlayCloseButton.addEventListener('click', (evt) => {
     evt.preventDefault();
-    overlay.classList.add('hidden'); // возвращаем все, как было (скрываем наложение, возвращаем скролл)
-    document.body.classList.remove('modal-open');  // возвращаем все, как было (скрываем наложение, возвращаем скролл)
-  });
-
-  /* обработчик события на закрытие галереи (по нажатию кнопки Esc) */
-  document.addEventListener('keydown', (evt) => {
-    if (evt.key === 'Escape') {
-      overlay.classList.add('hidden'); // возвращаем все, как было (скрываем наложение, возвращаем скролл)
-      document.body.classList.remove('modal-open'); // возвращаем все, как было (скрываем наложение, возвращаем скролл)
-    }
+    overlay.classList.add('hidden'); // скрываем наложение
+    document.body.classList.remove('modal-open');  // возвращаем скролл
+    document.removeEventListener('keydown', onOverlayEscKeydown); // убираем обработчик на закрытие окна по кнопке Esc
   });
 }
 
