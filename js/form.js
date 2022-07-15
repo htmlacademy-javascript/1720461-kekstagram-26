@@ -24,25 +24,29 @@ function newImageHandler () {
     formModal.classList.add('hidden'); // скрываем модальное окно
     document.body.classList.remove('modal-open'); // возвращаем скролл
     formUploadInput.value = ''; // сбрасываем значение инпута загрузки изображения
-    document.removeEventListener('keydown', onOverlayEscKeydown); // убираем обработчик на закрытие окна по кнопке Esc
+    document.removeEventListener('keydown', onModalEscKeydown); // убираем обработчик на закрытие окна по кнопке Esc
+    formCloseButton.removeEventListener('click', onCloseButtonClick); // убираем обработчик на закрытие окна по кнопке Esc
   }
 
   // функция закрытия модального окна по нажатию кнопки Esc
-  function onOverlayEscKeydown (evt) {
+  function onModalEscKeydown (evt) {
     if (evt.key === 'Escape') { // добавим условие скрытия
-      closeModal();
+      if (evt.target !== hashTagInput && evt.target !== commentInput) {
+        closeModal();
+      }
     }
+  }
+
+  // функция закрытия модального окна по клику
+  function onCloseButtonClick () {
+    closeModal();
   }
 
   formUploadInput.addEventListener('change', () => { // добавляем обработчик на change, чтобы отследить добавление новой картинки пользователем
     openModal();
-    formCloseButton.addEventListener('click', () => { // при добавлении новой картинки добавляем обработчик на закрытие модального окна
-      closeModal();
-    });
-    document.addEventListener('keydown', onOverlayEscKeydown); // при добавлении новой картинки добавляем обработчик на закрытие окна по кнопке Esc
+    formCloseButton.addEventListener('click', onCloseButtonClick); // при добавлении новой картинки добавляем обработчик на закрытие модального окна
+    document.addEventListener('keydown', onModalEscKeydown); // при добавлении новой картинки добавляем обработчик на закрытие окна по кнопке Esc
   });
-
-  // добавить: игнорирование Esc при фокусе на поле комментария, игнорирование Esc при фокусе на поле хештега
 }
 
 
@@ -55,43 +59,52 @@ function validateForm () {
     errorTextClass: 'text-error'
   });
 
-  // функция валидации поля "Хештег"
-  function validateHashTagInput(value) {
+  // функция валидации поля "Хештег" с помощью регулярного выражения
+  function validateHashTagWithRegExp (value) {
     if (value === '') { // проверяем наличие заполненности поля, если поле пустое, пропускаем валидацию и...
       return true; // ...возвращаем true
     }
-
-    value = String(value).toLowerCase(); // приводим входные данные к одному регистру, в случае, когда входные данные в разных регистрах
     const regExp = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/; // добавляем условие проверки в виде регулярного выражения
     const hashTagsArray = value.split(' '); // создаем из набора хештегов массив, в случае, если хештегов больше, чем один
+    const checkResult = hashTagsArray.every((arrayElement) => regExp.test(arrayElement)); // с помощью метода .every() проверим, что все элементы проходят валидацию
+    return checkResult; // если все элементы проходят валидацию, возвращаем true, если хоть один не прошел валидацию, то тогда возвращаем false
+  }
 
-    for (let i = 1; i <= hashTagsArray.length; i++) { // создаем цикл, чтобы найти повторяющиеся хештеги в массиве
-      const elementToCompare = hashTagsArray[0]; // создадим переменную, с которой начнем сравнение с другими элементами массива
-      if (elementToCompare === hashTagsArray[i]) { // если в массиве нашлись одинаковые элементы...
-        return false; // ...возвращаем false
-      } else { // если одинаковых элементов нет, то выполняем оставшуюся валидацию:
-        if (hashTagsArray.length <= 5) { // создаем цикл, чтобы отследить количество элементов в массиве, если элементов меньше 5, то выполняем оставшуюся валидацию
-          const checkResult = hashTagsArray.every((arrayElement) => regExp.test(arrayElement)); // с помощью метода .every() проверим, что все элементы проходят валидацию
-          return checkResult; // если все элементы проходят валидацию, возвращаем true, если хоть один не прошел валидацию, то тогда возвращаем false
-        } else {
-          return false; // если элементов в массиве больше 5, возвращаем false
-        }
-      }
+  // функция валидации поля "Хештег", не более 5 элементов
+  function isNoMoreThanFiveElements (value) {
+    const hashTagsArray = value.split(' '); // создаем из набора хештегов массив, для подсчета количества хештегов
+    if (hashTagsArray.length <= 5) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // функция валидации поля "Хештег", без повторяющихся элементов
+  function areSameElements (value) {
+    value = String(value).toLowerCase(); // приводим входные данные к одному регистру
+    const hashTagsArray = value.split(' '); // создаем из набора хештегов массив, для подсчета количества хештегов
+    const set = new Set(hashTagsArray);
+    if (set.size === hashTagsArray.length) {
+      return true;
+    } else {
+      return false;
     }
   }
 
   // функция валидации поля "Комментарий"
-  function validateCommentInput(value) {
+  function validateCommentMaxLength(value) {
     return value.length <= 140; // добавляем условие и возвращаем значение
   }
 
   // добавляем валидаторы
-  pristine.addValidator(hashTagInput, validateHashTagInput, 'Хештеги: начинаются с \'#\', разделяются пробелом, регистр не важен, без спецсимволов и повторов, макс. длина - 20 символов, макс. - 5 хештегов');
-  pristine.addValidator(commentInput, validateCommentInput, 'Длина комментария ограничена 140 символами');
+  pristine.addValidator(hashTagInput, validateHashTagWithRegExp, 'Хештеги начинаются с \'#\', разделяются пробелом, не содержат спецсимволов, макс. длина - 20 символов');
+  pristine.addValidator(hashTagInput, isNoMoreThanFiveElements, 'Максимальное количество хештегов - 5 штук');
+  pristine.addValidator(hashTagInput, areSameElements, 'Хештеги не могут повторяться');
+  pristine.addValidator(commentInput, validateCommentMaxLength, 'Длина комментария ограничена 140 символами');
 
   form.addEventListener('submit', (evt) => { // добавляем обработчик на кнопку отправки формы
     evt.preventDefault(); // отменяем действие по умолчанию, чтобы не дать форме отправиться с любыми данными, в том числе, и с некорректными
-
     const isValid = pristine.validate(); // запускаем валидацию
 
     if (isValid) { // если валидация пройдена успешно
