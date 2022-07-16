@@ -78,7 +78,7 @@ function createOnePictureItem (id) {
     url: `photos/${id}.jpg`,
     description: getRandomArrayElement(DESCRIPTION),
     likes: getRandomNumber(15, 200),
-    comments: Array.from({length: getRandomNumber(1, 5)}, createComment)
+    comments: Array.from({length: getRandomNumber(0, 11)}, createComment)
   });
 }
 

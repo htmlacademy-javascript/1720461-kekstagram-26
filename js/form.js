@@ -65,14 +65,14 @@ function validateForm () {
       return true; // ...возвращаем true
     }
     const regExp = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/; // добавляем условие проверки в виде регулярного выражения
-    const hashTagsArray = value.split(' '); // создаем из набора хештегов массив, в случае, если хештегов больше, чем один
+    const hashTagsArray = value.trim().split(' '); // создаем из набора хештегов массив, в случае, если хештегов больше, чем один
     const checkResult = hashTagsArray.every((arrayElement) => regExp.test(arrayElement)); // с помощью метода .every() проверим, что все элементы проходят валидацию
     return checkResult; // если все элементы проходят валидацию, возвращаем true, если хоть один не прошел валидацию, то тогда возвращаем false
   }
 
   // функция валидации поля "Хештег", не более 5 элементов
   function isNoMoreThanFiveElements (value) {
-    const hashTagsArray = value.split(' '); // создаем из набора хештегов массив, для подсчета количества хештегов
+    const hashTagsArray = value.trim().split(' '); // создаем из набора хештегов массив, для подсчета количества хештегов
     if (hashTagsArray.length <= 5) {
       return true;
     } else {
@@ -83,7 +83,7 @@ function validateForm () {
   // функция валидации поля "Хештег", без повторяющихся элементов
   function areSameElements (value) {
     value = String(value).toLowerCase(); // приводим входные данные к одному регистру
-    const hashTagsArray = value.split(' '); // создаем из набора хештегов массив, для подсчета количества хештегов
+    const hashTagsArray = value.trim().split(' '); // создаем из набора хештегов массив, для подсчета количества хештегов
     const set = new Set(hashTagsArray);
     if (set.size === hashTagsArray.length) {
       return true;
