@@ -1,12 +1,12 @@
 /* импортируем необходимые функции */
-import {createPhotos} from './photo.js';
-import {generatedPicturesArray} from './data.js';
-import {viewGalleryHandler} from './gallery.js';
-import {newImageHandler, validateForm} from './form.js';
+import {createImages} from './create-images.js';
+import {generatedImagesArray} from './data.js';
+import {viewFullImage} from './overlay.js';
+import {addNewImage, validateForm} from './form.js';
 
 
 /* делаем вызов функций */
-createPhotos(generatedPicturesArray);
-viewGalleryHandler();
-newImageHandler();
+createImages(generatedImagesArray);
+viewFullImage(generatedImagesArray);
+addNewImage();
 validateForm();
