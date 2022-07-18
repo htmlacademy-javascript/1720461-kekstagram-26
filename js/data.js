@@ -57,7 +57,7 @@ const DESCRIPTION = [
 
 /* создаем счетчик */
 let counterForID = 1;
-const generatedPicturesArray = [];
+const generatedImagesArray = [];
 
 
 /* функция создает один комментарий */
@@ -72,30 +72,30 @@ function createComment () {
 
 
 /* функция создает одну картинку и добавляет случайное количество комментариев (от 1 до 5) */
-function createOnePictureItem (id) {
+function createOneImageItem (id) {
   return ({
     id,
     url: `photos/${id}.jpg`,
     description: getRandomArrayElement(DESCRIPTION),
     likes: getRandomNumber(15, 200),
-    comments: Array.from({length: getRandomNumber(0, 11)}, createComment)
+    comments: Array.from({length: getRandomNumber(15, 15)}, createComment)
   });
 }
 
 
 /* функция создает массив картинок с необходимым количеством итераций */
-function generatePicturesDataArray (count) {
+function generateImagesDataArray (count) {
 
   for (let i = 1; i <= count; i++) {
-    generatedPicturesArray.push(createOnePictureItem(i));
+    generatedImagesArray.push(createOneImageItem(i));
   }
-  return generatedPicturesArray;
+  return generatedImagesArray;
 }
 
 
 /* запускаем функцию */
-generatePicturesDataArray(25);
+generateImagesDataArray(25);
 
 
 /* экспортируем массив в main */
-export {generatedPicturesArray};
+export {generatedImagesArray};

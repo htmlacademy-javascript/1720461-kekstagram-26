@@ -11,7 +11,7 @@ const submitButton = form.querySelector('.img-upload__submit'); // кнопка 
 
 
 // функция загрузки нового изображения и работы с формой
-function newImageHandler () {
+function addNewImage () {
 
   // функция открытия модального окна
   function openModal () {
@@ -115,4 +115,4 @@ function validateForm () {
 }
 
 
-export {newImageHandler, validateForm};
+export {addNewImage, validateForm};
