@@ -27,7 +27,8 @@ function viewFullImage (generatedImagesArray) {
     overlayLikes.textContent = image.likes;
     overlayComments.textContent = image.comments.length;
     overlayDescription.textContent = image.description;
-    createComments (image);
+    createComments(image);
+    //createAllComments(image);
 
     document.addEventListener('keydown', onOverlayEscKeydown); // добавляем обработчик на закрытие окна по кнопке Esc
     overlayCloseButton.addEventListener('click', closeOverlay); // добавляем обработчик на закрытие оверлея по клику
@@ -64,49 +65,86 @@ function viewFullImage (generatedImagesArray) {
   // }
 
 
-  //const commentsArrayCopy = image.comments.slice();
-  //const commentsArray = commentsArrayCopy.slice(0, 5);
+
+
 
   const templateFragment = document.querySelector('#comment').content; // шаблон комментария (фрагмент)
   const template = templateFragment.querySelector('.social__comment'); // весь шаблон комментария
   const fragment = document.createDocumentFragment(); // создаем область document fragment
 
-
-
-  /* функция отрисовки комментариев */
-  function createComments (image) {
-
-    let counterNumberOfComments = 1;
-    const commentsArrayCopy = image.comments.slice();
-    const commentsArray = commentsArrayCopy.slice();
-
-    commentsArray.forEach((element) => {
+  function createAllComments (image) {
+    image.comments.forEach((element) => {
       const templateElement = template.cloneNode(true); // копируем новый элемент из шаблона
       const templatePicture = templateElement.querySelector('.social__picture'); // доступ к тегу img
       const templateText = templateElement.querySelector('.social__text'); // доступ к текстовому полю
 
-      commentCount.textContent = `${counterNumberOfComments} из ${image.comments.length} комментариев`;
       templatePicture.src = element.avatar; // путь до аватара
       templatePicture.alt = element.name; // комментатор
       templateText.textContent = element.message; // текст комментария
 
       fragment.appendChild(templateElement); // добавляем элемент в document fragment
       commentsContainer.appendChild(fragment); // добавляем document fragment в разметку
-
-      console.log(counterNumberOfComments);
-      console.log(commentsArrayCopy);
-
-      counterNumberOfComments++;
-      commentsArrayCopy.splice(0, 1);
-
-      if (commentsArrayCopy.length === 0) {
-        commentsLoader.classList.add('hidden');
-      }
     });
-
   }
 
-  clearComments (); // очистим комментарии один раз перед первым отрытием оверлея
+  function createComments (image) {
+    const commentsArrayCopy = image.comments.slice();
+    console.log(commentsArrayCopy);
+
+    const commentsArray = commentsArrayCopy.slice(0, 5);
+    console.log(commentsArray);
+
+    createAllComments(commentsArray);
+    console.log(createAllComments);
+  }
+
+  /*
+  + сперва минимальная функция которая рендерит все комменты какие ей отдают в аргумент.
+  - потом функция вокруг, которая:
+    - делает копию комментов,
+    - из копии внутрь первой отрезает пять комментов,
+    - проверяет длину копии и если она меньше 1 то скрывает кнопку удаляя слушатель,
+    - если больше то вешает на кнопку слушатель который по клику отрежет и отрисует еще пять
+  */
+
+
+
+
+
+  // /* функция отрисовки комментариев */
+  // function createComments (image) {
+
+  //   let counterNumberOfComments = 1;
+  //   const commentsArrayCopy = image.comments.slice();
+  //   const commentsArray = commentsArrayCopy.slice(0, 5);
+
+  //   commentsArray.forEach((element) => {
+  //     const templateElement = template.cloneNode(true); // копируем новый элемент из шаблона
+  //     const templatePicture = templateElement.querySelector('.social__picture'); // доступ к тегу img
+  //     const templateText = templateElement.querySelector('.social__text'); // доступ к текстовому полю
+
+  //     commentCount.textContent = `${counterNumberOfComments} из ${image.comments.length} комментариев`;
+  //     templatePicture.src = element.avatar; // путь до аватара
+  //     templatePicture.alt = element.name; // комментатор
+  //     templateText.textContent = element.message; // текст комментария
+
+  //     fragment.appendChild(templateElement); // добавляем элемент в document fragment
+  //     commentsContainer.appendChild(fragment); // добавляем document fragment в разметку
+
+  //     console.log(counterNumberOfComments);
+  //     console.log(commentsArrayCopy);
+
+  //     counterNumberOfComments++;
+  //     commentsArrayCopy.splice(0, 1);
+
+  //     if (commentsArrayCopy.length === 0) {
+  //       commentsLoader.classList.add('hidden');
+  //     }
+  //   });
+
+  // }
+
+  clearComments(); // очистим комментарии один раз перед первым отрытием оверлея
 
   /* обработчик событий на открытие оверлея */
   picturesContainer.addEventListener('click', (evt) => {
