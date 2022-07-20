@@ -1,3 +1,7 @@
+import {changeScale, deleteScaleHandlers} from './scale.js';
+import {chooseEffects, deleteSlider} from './effects.js';
+
+
 // селекторы для открытия и закрытия модального окна
 const form = document.querySelector('.img-upload__form'); // селектор на всю форму
 const formUploadInput = form.querySelector('#upload-file'); // инпут загрузки нового файла
@@ -26,6 +30,8 @@ function addNewImage () {
     formUploadInput.value = ''; // сбрасываем значение инпута загрузки изображения
     document.removeEventListener('keydown', onModalEscKeydown); // убираем обработчик на закрытие окна по кнопке Esc
     formCloseButton.removeEventListener('click', onCloseButtonClick); // убираем обработчик на закрытие окна по кнопке Esc
+    deleteSlider(); // вызываем функцию из другого модуля, убираем обработчик для списка эффектов и удаляем слайдер
+    deleteScaleHandlers();
   }
 
   // функция закрытия модального окна по нажатию кнопки Esc
@@ -46,6 +52,9 @@ function addNewImage () {
     openModal();
     formCloseButton.addEventListener('click', onCloseButtonClick); // при добавлении новой картинки добавляем обработчик на закрытие модального окна
     document.addEventListener('keydown', onModalEscKeydown); // при добавлении новой картинки добавляем обработчик на закрытие окна по кнопке Esc
+
+    changeScale(); // вызываем функцию из другого модуля, которая будет работать с изменением масштаба
+    chooseEffects(); // вызываем функцию из другого модуля, которая будет работать с эффектами и слайдером
   });
 }
 

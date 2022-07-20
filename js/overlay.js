@@ -17,6 +17,7 @@ function viewFullImage (generatedImagesArray) {
   const commentsLoader = overlay.querySelector('.comments-loader'); // кнопка загрузки дополнительных комментариев
   const commentCount = overlay.querySelector('.social__comment-count'); // блок счетчика комментариев
 
+  let addDefiniteComments = null; // добавляем переменную для функции createDefiniteComments
 
   /* функция открытия оверлея */
   function openOverlay (image) {
@@ -29,7 +30,6 @@ function viewFullImage (generatedImagesArray) {
     overlayDescription.textContent = image.description;
     clearComments(); // очищаем комментарии
     createComments(image.comments);
-
     document.addEventListener('keydown', onOverlayEscKeydown); // добавляем обработчик на закрытие окна по кнопке Esc
     overlayCloseButton.addEventListener('click', closeOverlay); // добавляем обработчик на закрытие оверлея по клику
   }
@@ -42,7 +42,7 @@ function viewFullImage (generatedImagesArray) {
     clearComments(); // очищаем комментарии
     document.removeEventListener('keydown', onOverlayEscKeydown); // убираем обработчик на закрытие окна по кнопке Esc
     overlayCloseButton.removeEventListener('click', closeOverlay); // убираем обработчик на закрытие окна по клику
-    commentsLoader.removeEventListener('click', createComments); // убираем обработчик на кнопку загрузки комментариев
+    commentsLoader.removeEventListener('click', addDefiniteComments); // убираем обработчик на кнопку загрузки комментариев
   }
 
   /* функция закрытия оверлея (по нажатию кнопки Esc) */
@@ -67,22 +67,18 @@ function viewFullImage (generatedImagesArray) {
       const templateElement = template.cloneNode(true); // копируем новый элемент из шаблона
       const templatePicture = templateElement.querySelector('.social__picture'); // доступ к тегу img
       const templateText = templateElement.querySelector('.social__text'); // доступ к текстовому полю
-
       templatePicture.src = element.avatar; // путь до аватара
       templatePicture.alt = element.name; // комментатор
       templateText.textContent = element.message; // текст комментария
 
       fragment.appendChild(templateElement); // добавляем элемент в document fragment
     });
-
     commentsContainer.appendChild(fragment); // добавляем document fragment в разметку
   }
 
   /* функция отображения комментариев */
   function createComments (comments) {
-
     const commentsArrayCopy = comments.slice();
-    console.log(commentsArrayCopy);
 
     if (commentsArrayCopy.length <= 5) {
       createAllComments(commentsArrayCopy);
@@ -90,31 +86,30 @@ function viewFullImage (generatedImagesArray) {
       return;
     }
 
+    addDefiniteComments = function createDefiniteComments () {
+      createAllComments(commentsArrayCopy.splice(0, 5));
+
+      if (commentsArrayCopy.length === 0) {
+        commentsLoader.classList.add('hidden');
+        commentsLoader.removeEventListener('click', addDefiniteComments); // убираем обработчик на кнопку загрузки комментариев
+      }
+    };
+
     createAllComments(commentsArrayCopy.splice(0, 5));
-
     commentsLoader.classList.remove('hidden');
-    commentsLoader.addEventListener('click', () => createAllComments(commentsArrayCopy.splice(0, 5))); // добавляем обработчик на кнопку загрузки комментариев
-
-    if (commentsArrayCopy.length === 0) {
-      commentsLoader.classList.add('hidden');
-      commentsLoader.removeEventListener('click', () => createAllComments(commentsArrayCopy.splice(0, 5))); // добавляем обработчик на кнопку загрузки комментариев
-    }
+    commentsLoader.addEventListener('click', addDefiniteComments); // добавляем обработчик на кнопку загрузки комментариев
   }
 
   /* обработчик событий на открытие оверлея */
   picturesContainer.addEventListener('click', (evt) => {
-    evt.preventDefault(); // убираем действие по умолчанию, чтобы при клике браузер не перекидывал в начало страницы
-    const id = evt.target.dataset.id;
-    const image = generatedImagesArray.find((item) => +id === item.id);
-    openOverlay(image);
+    if (evt.target.dataset.id) { // создаем обработчик только для тех элементов родителя, которые имеют атрибут data-id
+      evt.preventDefault(); // убираем действие по умолчанию, чтобы при клике браузер не перекидывал в начало страницы
+      const id = evt.target.dataset.id;
+      const image = generatedImagesArray.find((item) => +id === item.id);
+      openOverlay(image);
+    }
   });
-
-
-  commentCount.textContent = '!!!';
-  console.log(commentCount);
 }
-
-
 
 
 /* экспортируем функцию в main */
