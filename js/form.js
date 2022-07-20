@@ -1,5 +1,5 @@
-import {changeScale} from './scale.js';
-import {chooseEffects, destroySlider} from './effects.js';
+import {changeScale, deleteScaleHandlers} from './scale.js';
+import {chooseEffects, deleteSlider} from './effects.js';
 
 
 // селекторы для открытия и закрытия модального окна
@@ -30,7 +30,8 @@ function addNewImage () {
     formUploadInput.value = ''; // сбрасываем значение инпута загрузки изображения
     document.removeEventListener('keydown', onModalEscKeydown); // убираем обработчик на закрытие окна по кнопке Esc
     formCloseButton.removeEventListener('click', onCloseButtonClick); // убираем обработчик на закрытие окна по кнопке Esc
-    destroySlider(); // вызываем функцию из другого модуля, убираем обработчик для списка эффектов и удаляем слайдер
+    deleteSlider(); // вызываем функцию из другого модуля, убираем обработчик для списка эффектов и удаляем слайдер
+    deleteScaleHandlers();
   }
 
   // функция закрытия модального окна по нажатию кнопки Esc

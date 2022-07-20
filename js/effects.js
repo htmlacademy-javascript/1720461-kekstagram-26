@@ -155,11 +155,11 @@ function chooseEffects () {
 }
 
 // функция, убирающая слайдер и обработчик
-function destroySlider () {
+function deleteSlider () {
   effectsList.removeEventListener('click', chooseEffectContainer); // при закрытии формы убираем обработчик
-  sliderBar.noUiSlider.destroy(); // при закрытии формы удаляем слайдер
+  sliderBar.noUiSlider.destroy(); // а также удаляем слайдер
 }
 
 
 // экпортируем в form.js
-export {chooseEffects, destroySlider};
+export {chooseEffects, deleteSlider};
