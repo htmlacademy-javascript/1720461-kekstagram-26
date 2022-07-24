@@ -15,7 +15,7 @@ function viewFullImage (generatedImagesArray) {
   /* селекторы для комментариев */
   const commentsContainer = overlay.querySelector('.social__comments'); // контейнер для вставки комментариев
   const commentsLoader = overlay.querySelector('.comments-loader'); // кнопка загрузки дополнительных комментариев
-  const commentCount = overlay.querySelector('.social__comment-count'); // блок счетчика комментариев
+  // const commentCount = overlay.querySelector('.social__comment-count'); // блок счетчика комментариев
 
   let addDefiniteComments = null; // добавляем переменную для функции createDefiniteComments
 

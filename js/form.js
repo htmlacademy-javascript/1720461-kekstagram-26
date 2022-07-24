@@ -13,6 +13,8 @@ const hashTagInput = form.querySelector('.text__hashtags'); // текстово�
 const commentInput = form.querySelector('.text__description'); // текстовое поле "Комментарий"
 const submitButton = form.querySelector('.img-upload__submit'); // кнопка отправки формы (submit)
 
+let closeModal = null;
+
 
 // функция загрузки нового изображения и работы с формой
 function addNewImage () {
@@ -24,15 +26,15 @@ function addNewImage () {
   }
 
   // функция закрытия модального окна
-  function closeModal () {
+  closeModal = function () {
     formModal.classList.add('hidden'); // скрываем модальное окно
     document.body.classList.remove('modal-open'); // возвращаем скролл
     formUploadInput.value = ''; // сбрасываем значение инпута загрузки изображения
     document.removeEventListener('keydown', onModalEscKeydown); // убираем обработчик на закрытие окна по кнопке Esc
     formCloseButton.removeEventListener('click', onCloseButtonClick); // убираем обработчик на закрытие окна по кнопке Esc
     deleteSlider(); // вызываем функцию из другого модуля, убираем обработчик для списка эффектов и удаляем слайдер
-    deleteScaleHandlers();
-  }
+    deleteScaleHandlers(); // убираем обработчики функции масштаба
+  };
 
   // функция закрытия модального окна по нажатию кнопки Esc
   function onModalEscKeydown (evt) {
@@ -56,11 +58,12 @@ function addNewImage () {
     changeScale(); // вызываем функцию из другого модуля, которая будет работать с изменением масштаба
     chooseEffects(); // вызываем функцию из другого модуля, которая будет работать с эффектами и слайдером
   });
+  return closeModal;
 }
 
 
 // функция валидации формы
-function validateForm () {
+function validateForm (onSuccess) {
   const pristine = new Pristine(form, { // добавляем новый экземпляр валидации формы Pristine
     classTo: 'img-upload__field-wrapper',
     errorTextParent: 'img-upload__field-wrapper',
@@ -117,11 +120,19 @@ function validateForm () {
     const isValid = pristine.validate(); // запускаем валидацию
 
     if (isValid) { // если валидация пройдена успешно
-      form.submit(); // отправляем данные
+      const formData = new FormData(evt.target);
+      fetch(
+        'https://26.javascript.pages.academy/kekstagram',
+        {
+          method: 'POST',
+          body: formData,
+        },
+      ).then(() => onSuccess());
+      //form.submit(); // отправляем данные
       submitButton.disabled = true;  // блокируем кнопку submit после отправки
     }
   });
 }
 
-
-export {addNewImage, validateForm};
+console.log(closeModal);
+export {addNewImage, validateForm, closeModal};
