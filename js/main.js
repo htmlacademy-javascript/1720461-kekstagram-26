@@ -1,6 +1,5 @@
-/* импортируем необходимые функции */
+//import {showSuccessMessage} from './utils.js';
 import {createImages} from './create-images.js';
-//import {generatedImagesArray} from './data.js';
 import {viewFullImage} from './overlay.js';
 import {addNewImage, validateForm, closeModal} from './form.js';
 
@@ -22,3 +21,4 @@ fetch('https://26.javascript.pages.academy/kekstagram/data')
 // viewFullImage();
 addNewImage();
 validateForm(closeModal);
+

@@ -1,33 +1,40 @@
-/* функция выбирает случайное число из заданного диапазона */
-function getRandomNumber(minNumber, maxNumber) {
-  if (minNumber >= 0 && maxNumber >= 0) {
-    return Math.round((maxNumber - minNumber) * Math.random() + minNumber);
-  }
-  throw new Error ('Введены отрицательные числа');
+//
+
+
+
+
+
+
+// функция отображения информационного сообщения в случае ошибки загрузки данных
+function showErrorMessage () {
+
+  const fragment = document.createDocumentFragment(); // создаем область document fragment
+  const messageContainer = document.querySelector('body'); // элемент, куда будем вставлять сообщение
+  const templateFragment = document.querySelector('#error').content; // шаблон (фрагмент)
+  const template = templateFragment.querySelector('.error'); // весь шаблон ошибки загрузки
+  const templateElement = template.cloneNode(true); // копируем новый элемент из шаблона
+
+  fragment.appendChild(templateElement); // добавляем копию в область document fragment
+  messageContainer.appendChild(fragment); // добавляем document fragment в разметку
+
+  return messageContainer;
+}
+
+// функция отображения информационного сообщения в случае успешной загрузки данных
+function showSuccessMessage () {
+
+  const fragment = document.createDocumentFragment(); // создаем область document fragment
+  const messageContainer = document.querySelector('body'); // элемент, куда будем вставлять сообщение
+  const templateFragment = document.querySelector('#success').content; // шаблон (фрагмент)
+  const template = templateFragment.querySelector('.success'); // весь шаблон успешной загрузки
+  const templateElement = template.cloneNode(true); // копируем новый элемент из шаблона
+
+  fragment.appendChild(templateElement); // добавляем копию в область document fragment
+  messageContainer.appendChild(fragment); // добавляем document fragment в разметку
+
+  return messageContainer;
 }
 
 
-/* функция выбирает случайный элемент из заданного массива */
-function getRandomArrayElement (array) {
-  return array[getRandomNumber(0, array.length - 1)];
-}
-
-
-/* функция проверяет максимальную длину заданной строки, возвращает true или false */
-/*
-function hasAllowedStringLength(string, maxLength) {
-  if (typeof string === 'string') {
-    if (string.length <= maxLength) {
-      return true;
-    }
-    return false;
-  }
-  throw new Error ('Введены некорректные данные');
-}
-
-hasAllowedStringLength('Стас, ты молодец!', 17);
-*/
-
-
-export {getRandomNumber};
-export {getRandomArrayElement};
+/* экспортируем функцию */
+export {showErrorMessage, showSuccessMessage};

@@ -1,3 +1,4 @@
+import {showErrorMessage, showSuccessMessage} from './utils.js';
 import {changeScale, deleteScaleHandlers} from './scale.js';
 import {chooseEffects, deleteSlider} from './effects.js';
 
@@ -13,7 +14,7 @@ const hashTagInput = form.querySelector('.text__hashtags'); // текстово�
 const commentInput = form.querySelector('.text__description'); // текстовое поле "Комментарий"
 const submitButton = form.querySelector('.img-upload__submit'); // кнопка отправки формы (submit)
 
-let closeModal = null;
+let closeModal = null; // объявим переменную для будущей функции closeModal(), чтобы иметь возможность экспортирования данной функции в main.js
 
 
 // функция загрузки нового изображения и работы с формой
@@ -30,6 +31,9 @@ function addNewImage () {
     formModal.classList.add('hidden'); // скрываем модальное окно
     document.body.classList.remove('modal-open'); // возвращаем скролл
     formUploadInput.value = ''; // сбрасываем значение инпута загрузки изображения
+    hashTagInput.value = ''; // сбрасываем значение поля хештега
+    commentInput.value = ''; // сбрасываем значение поля комментария
+    submitButton.disabled = false; // делаем кнопку отправки формы активной
     document.removeEventListener('keydown', onModalEscKeydown); // убираем обработчик на закрытие окна по кнопке Esc
     formCloseButton.removeEventListener('click', onCloseButtonClick); // убираем обработчик на закрытие окна по кнопке Esc
     deleteSlider(); // вызываем функцию из другого модуля, убираем обработчик для списка эффектов и удаляем слайдер
@@ -58,7 +62,6 @@ function addNewImage () {
     changeScale(); // вызываем функцию из другого модуля, которая будет работать с изменением масштаба
     chooseEffects(); // вызываем функцию из другого модуля, которая будет работать с эффектами и слайдером
   });
-  return closeModal;
 }
 
 
@@ -127,12 +130,18 @@ function validateForm (onSuccess) {
           method: 'POST',
           body: formData,
         },
-      ).then(() => onSuccess());
-      //form.submit(); // отправляем данные
-      submitButton.disabled = true;  // блокируем кнопку submit после отправки
+      ).then((response) => {
+        if (response.ok) {
+          onSuccess();
+          showSuccessMessage();
+        } else {
+          showErrorMessage();
+        }
+      }).catch(() => showErrorMessage());
+      submitButton.disabled = true;  // блокируем кнопку submit после однократной отправки формы
     }
   });
 }
 
-console.log(closeModal);
+
 export {addNewImage, validateForm, closeModal};
