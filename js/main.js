@@ -1,6 +1,6 @@
 import {createImages} from './create-images.js';
 import {viewFullImage} from './overlay.js';
-import {addNewImage, validateForm, closeModal} from './form.js';
+import {addNewImage, validateForm} from './form.js';
 import {getData} from './network.js';
 
 
@@ -8,4 +8,4 @@ import {getData} from './network.js';
 getData(createImages);
 getData(viewFullImage);
 addNewImage();
-validateForm(closeModal);
+validateForm();

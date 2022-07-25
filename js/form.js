@@ -16,10 +16,7 @@ const commentInput = form.querySelector('.text__description'); // текстов
 const submitButton = form.querySelector('.img-upload__submit'); // кнопка отправки формы (submit)
 
 let closeModal = null; // объявим переменную для будущей функции closeModal(), чтобы иметь возможность экспортирования данной функции в main.js
-let successMessageHandler = null;
-let closeSuccessMessage = null;
 
-const successMessageCloseButton = document.querySelector('.success__button'); // селектор на кнопку закрытия информационного сообщения
 
 // функция загрузки нового изображения и работы с формой
 function addNewImage () {
@@ -43,24 +40,6 @@ function addNewImage () {
     deleteSlider(); // вызываем функцию из другого модуля, убираем обработчик для списка эффектов и удаляем слайдер
     deleteScaleHandlers(); // убираем обработчики функции масштаба
   };
-
-  // функция, добавляющая необходимые обработчики при показе окна с информационным сообщением
-  successMessageHandler = function () {
-    //submitButton.disabled = false; // делаем кнопку отправки формы активной
-    successMessageCloseButton.addEventListener('click', onSuccessMessageCloseButtonClick);
-  };
-
-
-  closeSuccessMessage = function () {
-    const successMessage = document.querySelector('.success');
-
-    successMessage.classList.add('hidden');
-
-    successMessageCloseButton.removeEventListener('click', onSuccessMessageCloseButtonClick);
-
-  };
-
-
 
   // функция закрытия модального окна по нажатию кнопки Esc
   function onModalEscKeydown (evt) {
@@ -149,15 +128,37 @@ function validateForm () {
       sendData(
         () => {
           showSuccessMessage();
+          closeModal();
           submitButton.disabled = false;
+
+          const successMessage = document.querySelector('.success');
+          const successMessageCloseButton = document.querySelector('.success__button');
+
+          function onSuccessMessageCloseButtonClick () {
+            successMessage.classList.add('hidden');
+            successMessageCloseButton.removeEventListener('click', onSuccessMessageCloseButtonClick);
+          }
+          successMessageCloseButton.addEventListener('click', onSuccessMessageCloseButtonClick);
         },
+
         () => {
           showErrorMessage();
           submitButton.disabled = false;
+          formModal.classList.add('hidden'); // скрываем модальное окно
+
+          const errorMessage = document.querySelector('.error');
+          const errorMessageCloseButton = document.querySelector('.error__button');
+
+          function onErrorMessageCloseButtonClick () {
+            formModal.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+            errorMessageCloseButton.removeEventListener('click', onErrorMessageCloseButtonClick);
+          }
+          errorMessageCloseButton.addEventListener('click', onErrorMessageCloseButtonClick);
         },
+
         new FormData(evt.target),
       );
-
     }
   });
 }
