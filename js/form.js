@@ -15,7 +15,10 @@ const commentInput = form.querySelector('.text__description'); // текстов
 const submitButton = form.querySelector('.img-upload__submit'); // кнопка отправки формы (submit)
 
 let closeModal = null; // объявим переменную для будущей функции closeModal(), чтобы иметь возможность экспортирования данной функции в main.js
+let successMessageHandler = null;
+let closeSuccessMessage = null;
 
+const successMessageCloseButton = document.querySelector('.success__button'); // селектор на кнопку закрытия информационного сообщения
 
 // функция загрузки нового изображения и работы с формой
 function addNewImage () {
@@ -35,10 +38,28 @@ function addNewImage () {
     commentInput.value = ''; // сбрасываем значение поля комментария
     submitButton.disabled = false; // делаем кнопку отправки формы активной
     document.removeEventListener('keydown', onModalEscKeydown); // убираем обработчик на закрытие окна по кнопке Esc
-    formCloseButton.removeEventListener('click', onCloseButtonClick); // убираем обработчик на закрытие окна по кнопке Esc
+    formCloseButton.removeEventListener('click', onCloseButtonClick); // убираем обработчик на закрытие окна по клику на кнопку закрытия
     deleteSlider(); // вызываем функцию из другого модуля, убираем обработчик для списка эффектов и удаляем слайдер
     deleteScaleHandlers(); // убираем обработчики функции масштаба
   };
+
+  // функция, добавляющая необходимые обработчики при показе окна с информационным сообщением
+  successMessageHandler = function () {
+    //submitButton.disabled = false; // делаем кнопку отправки формы активной
+    successMessageCloseButton.addEventListener('click', onSuccessMessageCloseButtonClick);
+  };
+
+
+  closeSuccessMessage = function () {
+    const successMessage = document.querySelector('.success');
+
+    successMessage.classList.add('hidden');
+
+    successMessageCloseButton.removeEventListener('click', onSuccessMessageCloseButtonClick);
+
+  };
+
+
 
   // функция закрытия модального окна по нажатию кнопки Esc
   function onModalEscKeydown (evt) {
@@ -125,7 +146,7 @@ function validateForm (onSuccess) {
     if (isValid) { // если валидация пройдена успешно
       const formData = new FormData(evt.target);
       fetch(
-        'https://26.javascript.pages.academy/kekstagram',
+        'https://26.javascript.pages.academ/kekstagram',
         {
           method: 'POST',
           body: formData,
@@ -134,8 +155,10 @@ function validateForm (onSuccess) {
         if (response.ok) {
           onSuccess();
           showSuccessMessage();
+          //successMessageHandler();
         } else {
           showErrorMessage();
+
         }
       }).catch(() => showErrorMessage());
       submitButton.disabled = true;  // блокируем кнопку submit после однократной отправки формы
