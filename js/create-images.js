@@ -30,5 +30,5 @@ function createImages (images) {
 }
 
 
-/* экспортируем функцию в main */
+/* экспортируем функцию в main.js */
 export {createImages};
