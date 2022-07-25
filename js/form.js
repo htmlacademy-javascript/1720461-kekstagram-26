@@ -1,5 +1,7 @@
+import {showErrorMessage, showSuccessMessage} from './utils.js';
 import {changeScale, deleteScaleHandlers} from './scale.js';
 import {chooseEffects, deleteSlider} from './effects.js';
+import {sendData} from './network.js';
 
 
 // селекторы для открытия и закрытия модального окна
@@ -13,6 +15,8 @@ const hashTagInput = form.querySelector('.text__hashtags'); // текстово�
 const commentInput = form.querySelector('.text__description'); // текстовое поле "Комментарий"
 const submitButton = form.querySelector('.img-upload__submit'); // кнопка отправки формы (submit)
 
+let closeModal = null; // объявим переменную для будущей функции closeModal(), чтобы иметь возможность экспортирования данной функции в main.js
+
 
 // функция загрузки нового изображения и работы с формой
 function addNewImage () {
@@ -24,15 +28,18 @@ function addNewImage () {
   }
 
   // функция закрытия модального окна
-  function closeModal () {
+  closeModal = function () {
     formModal.classList.add('hidden'); // скрываем модальное окно
     document.body.classList.remove('modal-open'); // возвращаем скролл
     formUploadInput.value = ''; // сбрасываем значение инпута загрузки изображения
+    hashTagInput.value = ''; // сбрасываем значение поля хештега
+    commentInput.value = ''; // сбрасываем значение поля комментария
+    submitButton.disabled = false; // делаем кнопку отправки формы активной
     document.removeEventListener('keydown', onModalEscKeydown); // убираем обработчик на закрытие окна по кнопке Esc
-    formCloseButton.removeEventListener('click', onCloseButtonClick); // убираем обработчик на закрытие окна по кнопке Esc
+    formCloseButton.removeEventListener('click', onCloseButtonClick); // убираем обработчик на закрытие окна по клику на кнопку закрытия
     deleteSlider(); // вызываем функцию из другого модуля, убираем обработчик для списка эффектов и удаляем слайдер
-    deleteScaleHandlers();
-  }
+    deleteScaleHandlers(); // убираем обработчики функции масштаба
+  };
 
   // функция закрытия модального окна по нажатию кнопки Esc
   function onModalEscKeydown (evt) {
@@ -117,11 +124,44 @@ function validateForm () {
     const isValid = pristine.validate(); // запускаем валидацию
 
     if (isValid) { // если валидация пройдена успешно
-      form.submit(); // отправляем данные
-      submitButton.disabled = true;  // блокируем кнопку submit после отправки
+      submitButton.disabled = true;  // блокируем кнопку submit после однократной отправки формы
+      sendData(
+        () => {
+          showSuccessMessage();
+          closeModal();
+          submitButton.disabled = false;
+
+          const successMessage = document.querySelector('.success');
+          const successMessageCloseButton = document.querySelector('.success__button');
+
+          function onSuccessMessageCloseButtonClick () {
+            successMessage.classList.add('hidden');
+            successMessageCloseButton.removeEventListener('click', onSuccessMessageCloseButtonClick);
+          }
+          successMessageCloseButton.addEventListener('click', onSuccessMessageCloseButtonClick);
+        },
+
+        () => {
+          showErrorMessage();
+          submitButton.disabled = false;
+          formModal.classList.add('hidden'); // скрываем модальное окно
+
+          const errorMessage = document.querySelector('.error');
+          const errorMessageCloseButton = document.querySelector('.error__button');
+
+          function onErrorMessageCloseButtonClick () {
+            formModal.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+            errorMessageCloseButton.removeEventListener('click', onErrorMessageCloseButtonClick);
+          }
+          errorMessageCloseButton.addEventListener('click', onErrorMessageCloseButtonClick);
+        },
+
+        new FormData(evt.target),
+      );
     }
   });
 }
 
 
-export {addNewImage, validateForm};
+export {addNewImage, validateForm, closeModal};
