@@ -1,6 +1,7 @@
 import {showErrorMessage, showSuccessMessage} from './utils.js';
 import {changeScale, deleteScaleHandlers} from './scale.js';
 import {chooseEffects, deleteSlider} from './effects.js';
+import {sendData} from './network.js';
 
 
 // селекторы для открытия и закрытия модального окна
@@ -87,7 +88,7 @@ function addNewImage () {
 
 
 // функция валидации формы
-function validateForm (onSuccess) {
+function validateForm () {
   const pristine = new Pristine(form, { // добавляем новый экземпляр валидации формы Pristine
     classTo: 'img-upload__field-wrapper',
     errorTextParent: 'img-upload__field-wrapper',
@@ -144,24 +145,19 @@ function validateForm (onSuccess) {
     const isValid = pristine.validate(); // запускаем валидацию
 
     if (isValid) { // если валидация пройдена успешно
-      const formData = new FormData(evt.target);
-      fetch(
-        'https://26.javascript.pages.academ/kekstagram',
-        {
-          method: 'POST',
-          body: formData,
-        },
-      ).then((response) => {
-        if (response.ok) {
-          onSuccess();
-          showSuccessMessage();
-          //successMessageHandler();
-        } else {
-          showErrorMessage();
-
-        }
-      }).catch(() => showErrorMessage());
       submitButton.disabled = true;  // блокируем кнопку submit после однократной отправки формы
+      sendData(
+        () => {
+          showSuccessMessage();
+          submitButton.disabled = false;
+        },
+        () => {
+          showErrorMessage();
+          submitButton.disabled = false;
+        },
+        new FormData(evt.target),
+      );
+
     }
   });
 }

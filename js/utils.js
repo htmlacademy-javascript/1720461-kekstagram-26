@@ -1,5 +1,4 @@
-
-
+import {closeModal} from './form.js';
 
 
 
@@ -36,6 +35,8 @@ function showErrorMessage () {
 
 // функция отображения информационного сообщения в случае успешной загрузки данных
 function showSuccessMessage () {
+
+  closeModal();
 
   const fragment = document.createDocumentFragment(); // создаем область document fragment
   const messageContainer = document.querySelector('body'); // элемент, куда будем вставлять сообщение
