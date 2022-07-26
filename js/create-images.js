@@ -1,10 +1,7 @@
-/* функция, создающая HTML-разметку для фотографий на основе данных и добавляющая ее в общую разметку*/
+// функция, создающая HTML-разметку для фотографий на основе данных и добавляющая ее в общую разметку
 function createImages (images) {
 
   const imagesArray = images; // получаем данные
-
-
-
 
   const imagesContainer = document.querySelector('.pictures'); // контейнер для фото
   const templateFragment = document.querySelector('#picture').content; // шаблон (фрагмент)
@@ -36,5 +33,5 @@ function createImages (images) {
 }
 
 
-/* экспортируем функцию в main.js */
+// экспортируем функцию в main.js
 export {createImages};

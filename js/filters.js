@@ -3,6 +3,7 @@ import {createImages} from './create-images.js';
 import {getData} from './network.js';
 
 
+// функция применения фильтра
 function applyFilter () {
   const filtersElement = document.querySelector('.img-filters');
   filtersElement.classList.remove('img-filters--inactive');
@@ -21,7 +22,7 @@ function applyFilter () {
     evt.target.classList.add('img-filters__button--active');
   }
 
-
+  // функция сравнения для метода .sort()
   function compareCommentsCount (imageA, imageB) {
     const CommentsCountA = imageA.comments.length;
     const CommentsCountB = imageB.comments.length;
@@ -29,8 +30,7 @@ function applyFilter () {
     return CommentsCountB - CommentsCountA;
   }
 
-
-
+  // функция применения фильтра обсуждаемых фото
   function applyFilterDiscussed (images) {
     const imagesArray = images.slice();
 
@@ -63,8 +63,7 @@ function applyFilter () {
     imagesContainer.appendChild(fragment); // добавляем document fragment в разметку
   }
 
-
-
+  // функция применения фильтра случайных фото
   function applyFilterRandom (images) {
     const imagesArrayFull = images.slice();
 
@@ -119,10 +118,8 @@ function applyFilter () {
       applyCSSStylesToActiveFilter(evt);
       getData(applyFilterDiscussed, showInfoMessage);
     }
-
   });
-
-
 }
+
 
 export {applyFilter};

@@ -26,4 +26,5 @@ function sendData (functionOnSuccess, functionOnFail, requestBody) {
   }).catch(() => functionOnFail());
 }
 
+
 export {getData, sendData};

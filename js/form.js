@@ -23,6 +23,15 @@ function addNewImage () {
 
   // функция открытия модального окна
   function openModal () {
+    const formUploadImage = form.querySelector('.img-upload__preview img');
+    const effectPreviewImage = form.querySelectorAll('.effects__preview');
+    const uploadFile = formUploadInput.files[0];
+    formUploadImage.src = URL.createObjectURL(uploadFile);
+
+    effectPreviewImage.forEach((element) => {
+      element.style.backgroundImage = `url(${URL.createObjectURL(uploadFile)})`;
+    });
+
     formModal.classList.remove('hidden'); // показываем модальное окно
     document.body.classList.add('modal-open'); // скрываем скролл
   }
