@@ -65,21 +65,21 @@ function applyFilter () {
 
   // функция применения фильтра случайных фото
   function applyFilterRandom (images) {
-    const imagesArrayFull = images.slice();
+    const imagesArrayFull = images.slice(); // создаем копию массива
 
-    const set = new Set();
-    while (set.size < 10) {
-      set.add(getRandomArrayElement(imagesArrayFull));
+    const set = new Set(); // создаем новый экземпляр сета для ситуации, когда рандомизатор выберет 2 одинаковых числа
+    while (set.size < 10) { // итерируемся, пока не наберется 10 элементов
+      set.add(getRandomArrayElement(imagesArrayFull)); // добавляем рандомный элемент в сет
     }
-    const imagesArray = Array.from(set);
+    const imagesArray = Array.from(set); // превращаем сет в массив с помощью Array.from
 
     const imagesContainer = document.querySelector('.pictures'); // контейнер для фото
     const templateFragment = document.querySelector('#picture').content; // шаблон (фрагмент)
     const template = templateFragment.querySelector('.picture'); // весь шаблон
     const fragment = document.createDocumentFragment(); // создаем область document fragment
 
-    const imagesTodelete = document.querySelectorAll('.picture');
-    imagesTodelete.forEach((image) => image.remove());
+    const imagesTodelete = document.querySelectorAll('.picture'); // выберем все элементы для удаления
+    imagesTodelete.forEach((image) => image.remove()); // проитерируемся и для каждого элемента применим метод remove
 
     for (let i = 0; i < imagesArray.length; i++) {
       const templateElement = template.cloneNode(true); // копируем новый элемент из шаблона
