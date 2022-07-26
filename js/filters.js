@@ -1,4 +1,6 @@
+import {getRandomArrayElement, showInfoMessage, debounce} from './utils.js';
 import {createImages} from './create-images.js';
+import {getData} from './network.js';
 
 
 function applyFilter () {
@@ -6,16 +8,11 @@ function applyFilter () {
   filtersElement.classList.remove('img-filters--inactive');
 
   const filtersContainer = filtersElement.querySelector('.img-filters__form');
-
   const filterDefault = filtersElement.querySelector('#filter-default');
   const filterRandom = filtersElement.querySelector('#filter-random');
   const filterDiscussed = filtersElement.querySelector('#filter-discussed');
 
   const allFilters = [filterDefault, filterRandom, filterDiscussed];
-
-  //console.log(allFilters);
-  //console.log(filtersContainer);
-
 
   function applyCSSStylesToActiveFilter (evt) {
     allFilters.forEach((element) => {
@@ -25,21 +22,103 @@ function applyFilter () {
   }
 
 
+  function compareCommentsCount (imageA, imageB) {
+    const CommentsCountA = imageA.comments.length;
+    const CommentsCountB = imageB.comments.length;
+
+    return CommentsCountB - CommentsCountA;
+  }
+
+
+
+  function applyFilterDiscussed (images) {
+    const imagesArray = images.slice();
+
+    imagesArray.sort(compareCommentsCount);
+
+    const imagesContainer = document.querySelector('.pictures'); // контейнер для фото
+    const templateFragment = document.querySelector('#picture').content; // шаблон (фрагмент)
+    const template = templateFragment.querySelector('.picture'); // весь шаблон
+    const fragment = document.createDocumentFragment(); // создаем область document fragment
+
+    const imagesTodelete = document.querySelectorAll('.picture');
+    imagesTodelete.forEach((image) => image.remove());
+
+    for (let i = 0; i < imagesArray.length; i++) {
+      const templateElement = template.cloneNode(true); // копируем новый элемент из шаблона
+      const templateImage = templateElement.querySelector('.picture__img'); // доступ к тегу img
+      const templateDescription = templateElement.querySelector('.picture__img'); // описание
+      const templateComments = templateElement.querySelector('.picture__comments'); // количество комментариев
+      const templateLikes = templateElement.querySelector('.picture__likes'); // количество лайков
+
+      templateImage.src += imagesArray[i].url; // присваиваем значение пути (url) до картинки
+      templateComments.textContent = imagesArray[i].comments.length; // присваиваем значение количества комментариев
+      templateLikes.textContent = imagesArray[i].likes; // присваиваем значение количества лайков
+      templateDescription.alt = imagesArray[i].description; // присваиваем значение описания
+      templateImage.dataset.id = imagesArray[i].id; // создаем data-атрибут id и присваиваем значение
+
+      fragment.appendChild(templateElement); // добавляем элемент в document fragment
+    }
+
+    imagesContainer.appendChild(fragment); // добавляем document fragment в разметку
+  }
+
+
+
+  function applyFilterRandom (images) {
+    const imagesArrayFull = images.slice();
+
+    const set = new Set();
+    while (set.size < 10) {
+      set.add(getRandomArrayElement(imagesArrayFull));
+    }
+    const imagesArray = Array.from(set);
+
+    const imagesContainer = document.querySelector('.pictures'); // контейнер для фото
+    const templateFragment = document.querySelector('#picture').content; // шаблон (фрагмент)
+    const template = templateFragment.querySelector('.picture'); // весь шаблон
+    const fragment = document.createDocumentFragment(); // создаем область document fragment
+
+    const imagesTodelete = document.querySelectorAll('.picture');
+    imagesTodelete.forEach((image) => image.remove());
+
+    for (let i = 0; i < imagesArray.length; i++) {
+      const templateElement = template.cloneNode(true); // копируем новый элемент из шаблона
+      const templateImage = templateElement.querySelector('.picture__img'); // доступ к тегу img
+      const templateDescription = templateElement.querySelector('.picture__img'); // описание
+      const templateComments = templateElement.querySelector('.picture__comments'); // количество комментариев
+      const templateLikes = templateElement.querySelector('.picture__likes'); // количество лайков
+
+      templateImage.src += imagesArray[i].url; // присваиваем значение пути (url) до картинки
+      templateComments.textContent = imagesArray[i].comments.length; // присваиваем значение количества комментариев
+      templateLikes.textContent = imagesArray[i].likes; // присваиваем значение количества лайков
+      templateDescription.alt = imagesArray[i].description; // присваиваем значение описания
+      templateImage.dataset.id = imagesArray[i].id; // создаем data-атрибут id и присваиваем значение
+
+      fragment.appendChild(templateElement); // добавляем элемент в document fragment
+    }
+
+    imagesContainer.appendChild(fragment); // добавляем document fragment в разметку
+  }
+
 
   filtersContainer.addEventListener('click', (evt) => {
+    //debounce(() => {}, 500);
+
     evt.preventDefault();
     if (evt.target.id === 'filter-default') {
       applyCSSStylesToActiveFilter(evt);
-
+      getData(createImages, showInfoMessage);
     }
     if (evt.target.id === 'filter-random') {
       applyCSSStylesToActiveFilter(evt);
+      //debounce(() => getData(applyFilterRandom, showInfoMessage), 500);
+      getData(applyFilterRandom, showInfoMessage);
     }
     if (evt.target.id === 'filter-discussed') {
       applyCSSStylesToActiveFilter(evt);
+      getData(applyFilterDiscussed, showInfoMessage);
     }
-
-
 
   });
 
@@ -47,26 +126,3 @@ function applyFilter () {
 }
 
 export {applyFilter};
-
-
-
-// // функция устранения дребезга
-// function debounce (callback, timeoutDelay = 500) {
-//   // Используем замыкания, чтобы id таймаута у нас навсегда приклеился
-//   // к возвращаемой функции с setTimeout, тогда мы его сможем перезаписывать
-//   let timeoutId;
-
-//   return (...rest) => {
-//     // Перед каждым новым вызовом удаляем предыдущий таймаут,
-//     // чтобы они не накапливались
-//     clearTimeout(timeoutId);
-
-//     // Затем устанавливаем новый таймаут с вызовом колбэка на ту же задержку
-//     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
-
-//     // Таким образом цикл «поставить таймаут - удалить таймаут» будет выполняться,
-//     // пока действие совершается чаще, чем переданная задержка timeoutDelay
-//   };
-// }
-
-

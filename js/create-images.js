@@ -3,10 +3,16 @@ function createImages (images) {
 
   const imagesArray = images; // получаем данные
 
+
+
+
   const imagesContainer = document.querySelector('.pictures'); // контейнер для фото
   const templateFragment = document.querySelector('#picture').content; // шаблон (фрагмент)
   const template = templateFragment.querySelector('.picture'); // весь шаблон
   const fragment = document.createDocumentFragment(); // создаем область document fragment
+
+  const imagesTodelete = document.querySelectorAll('.picture');
+  imagesTodelete.forEach((image) => image.remove());
 
   for (let i = 0; i < imagesArray.length; i++) {
     const templateElement = template.cloneNode(true); // копируем новый элемент из шаблона

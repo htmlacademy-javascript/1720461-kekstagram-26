@@ -1,3 +1,18 @@
+// функция выбирает случайное число из заданного диапазона
+function getRandomNumber(minNumber, maxNumber) {
+  if (minNumber >= 0 && maxNumber >= 0) {
+    return Math.round((maxNumber - minNumber) * Math.random() + minNumber);
+  }
+  throw new Error ('Введены отрицательные числа');
+}
+
+
+// функция выбирает случайный элемент из заданного массива
+function getRandomArrayElement (array) {
+  return array[getRandomNumber(0, array.length - 1)];
+}
+
+
 // функция отображения информационного сообщения в случае ошибки отправки данных
 function showErrorMessage () {
   const fragment = document.createDocumentFragment(); // создаем область document fragment
@@ -44,5 +59,25 @@ function showInfoMessage () {
 }
 
 
-/* экспортируем функции */
-export {showErrorMessage, showSuccessMessage, showInfoMessage};
+// функция устранения дребезга
+function debounce (callback, timeoutDelay) {
+  // Используем замыкания, чтобы id таймаута у нас навсегда приклеился
+  // к возвращаемой функции с setTimeout, тогда мы его сможем перезаписывать
+  let timeoutId;
+
+  return (...rest) => {
+    // Перед каждым новым вызовом удаляем предыдущий таймаут,
+    // чтобы они не накапливались
+    clearTimeout(timeoutId);
+
+    // Затем устанавливаем новый таймаут с вызовом колбэка на ту же задержку
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+
+    // Таким образом цикл «поставить таймаут - удалить таймаут» будет выполняться,
+    // пока действие совершается чаще, чем переданная задержка timeoutDelay
+  };
+}
+
+
+// экспортируем функции
+export {getRandomArrayElement, showErrorMessage, showSuccessMessage, showInfoMessage, debounce};
