@@ -1,10 +1,10 @@
 // функция получения данных
-function getData (functionOnSuccess) {
+function getData (functionOnSuccess, functionOnFail) {
   fetch('https://26.javascript.pages.academy/kekstagram/data')
     .then((response) => response.json())
     .then((data) => {
       functionOnSuccess(data);
-    });
+    }).catch(() => functionOnFail());
 }
 
 

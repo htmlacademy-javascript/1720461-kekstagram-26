@@ -136,6 +136,7 @@ function validateForm () {
 
           function onSuccessMessageCloseButtonClick () {
             successMessage.classList.add('hidden');
+            successMessage.remove();
             successMessageCloseButton.removeEventListener('click', onSuccessMessageCloseButtonClick);
           }
           successMessageCloseButton.addEventListener('click', onSuccessMessageCloseButtonClick);
@@ -152,6 +153,7 @@ function validateForm () {
           function onErrorMessageCloseButtonClick () {
             formModal.classList.remove('hidden');
             errorMessage.classList.add('hidden');
+            errorMessage.remove();
             errorMessageCloseButton.removeEventListener('click', onErrorMessageCloseButtonClick);
           }
           errorMessageCloseButton.addEventListener('click', onErrorMessageCloseButtonClick);

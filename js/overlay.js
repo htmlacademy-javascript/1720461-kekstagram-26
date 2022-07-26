@@ -1,5 +1,5 @@
 /* функция полноэкранного просмотра фото */
-function viewFullImage (generatedImagesArray) {
+function viewFullImage (data) {
 
   /* селекторы для наложения */
   const overlay = document.querySelector('.big-picture'); // весь элемент наложение
@@ -105,7 +105,7 @@ function viewFullImage (generatedImagesArray) {
     if (evt.target.dataset.id) { // создаем обработчик только для тех элементов родителя, которые имеют атрибут data-id
       evt.preventDefault(); // убираем действие по умолчанию, чтобы при клике браузер не перекидывал в начало страницы
       const id = evt.target.dataset.id;
-      const image = generatedImagesArray.find((item) => +id === item.id);
+      const image = data.find((item) => +id === item.id);
       openOverlay(image);
     }
   });
