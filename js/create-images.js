@@ -1,4 +1,4 @@
-/* функция, создающая HTML-разметку для фотографий на основе данных и добавляющая ее в общую разметку*/
+// функция, создающая HTML-разметку для фотографий на основе данных и добавляющая ее в общую разметку
 function createImages (images) {
 
   const imagesArray = images; // получаем данные
@@ -7,6 +7,9 @@ function createImages (images) {
   const templateFragment = document.querySelector('#picture').content; // шаблон (фрагмент)
   const template = templateFragment.querySelector('.picture'); // весь шаблон
   const fragment = document.createDocumentFragment(); // создаем область document fragment
+
+  const imagesTodelete = document.querySelectorAll('.picture');
+  imagesTodelete.forEach((image) => image.remove());
 
   for (let i = 0; i < imagesArray.length; i++) {
     const templateElement = template.cloneNode(true); // копируем новый элемент из шаблона
@@ -30,5 +33,5 @@ function createImages (images) {
 }
 
 
-/* экспортируем функцию в main.js */
+// экспортируем функцию в main.js
 export {createImages};

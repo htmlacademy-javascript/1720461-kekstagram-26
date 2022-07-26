@@ -23,6 +23,15 @@ function addNewImage () {
 
   // функция открытия модального окна
   function openModal () {
+    const formUploadImage = form.querySelector('.img-upload__preview img');
+    const effectPreviewImage = form.querySelectorAll('.effects__preview');
+    const uploadFile = formUploadInput.files[0];
+    formUploadImage.src = URL.createObjectURL(uploadFile);
+
+    effectPreviewImage.forEach((element) => {
+      element.style.backgroundImage = `url(${URL.createObjectURL(uploadFile)})`;
+    });
+
     formModal.classList.remove('hidden'); // показываем модальное окно
     document.body.classList.add('modal-open'); // скрываем скролл
   }
@@ -136,6 +145,7 @@ function validateForm () {
 
           function onSuccessMessageCloseButtonClick () {
             successMessage.classList.add('hidden');
+            successMessage.remove();
             successMessageCloseButton.removeEventListener('click', onSuccessMessageCloseButtonClick);
           }
           successMessageCloseButton.addEventListener('click', onSuccessMessageCloseButtonClick);
@@ -152,6 +162,7 @@ function validateForm () {
           function onErrorMessageCloseButtonClick () {
             formModal.classList.remove('hidden');
             errorMessage.classList.add('hidden');
+            errorMessage.remove();
             errorMessageCloseButton.removeEventListener('click', onErrorMessageCloseButtonClick);
           }
           errorMessageCloseButton.addEventListener('click', onErrorMessageCloseButtonClick);
