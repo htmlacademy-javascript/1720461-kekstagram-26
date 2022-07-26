@@ -23,7 +23,7 @@ function showSuccessMessage () {
 
 
 // функция отображения информационного сообщения в случае ошибки загрузки данных
-function showGetDataErrorMessage () {
+function showInfoMessage () {
   const messageContainer = document.createElement('div');
   messageContainer.style.zIndex = '10';
   messageContainer.style.position = 'absolute';
@@ -34,7 +34,7 @@ function showGetDataErrorMessage () {
   messageContainer.style.fontSize = '30px';
   messageContainer.style.textAlign = 'center';
   messageContainer.style.backgroundColor = 'red';
-  messageContainer.textContent = 'Не удалось получить данные. Попробуйте еще раз';
+  messageContainer.textContent = 'Ошибка загрузки данных. Попробуйте еще раз.';
 
   document.body.append(messageContainer);
 
@@ -45,4 +45,4 @@ function showGetDataErrorMessage () {
 
 
 /* экспортируем функции */
-export {showErrorMessage, showSuccessMessage, showGetDataErrorMessage};
+export {showErrorMessage, showSuccessMessage, showInfoMessage};
