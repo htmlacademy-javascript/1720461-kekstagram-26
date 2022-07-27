@@ -15,9 +15,10 @@ function viewFullImage (data) {
   // селекторы для комментариев
   const commentsContainer = overlay.querySelector('.social__comments'); // контейнер для вставки комментариев
   const commentsLoader = overlay.querySelector('.comments-loader'); // кнопка загрузки дополнительных комментариев
-  // const commentCount = overlay.querySelector('.social__comment-count'); // блок счетчика комментариев
+  const commentsCount = overlay.querySelector('.social__comment-count'); // блок счетчика комментариев
 
   let addDefiniteComments = null; // добавляем переменную для функции createDefiniteComments
+  let commentsCounter = 0; // добавляем переменную для счетчика комментариев
 
   // функция открытия оверлея
   function openOverlay (image) {
@@ -29,7 +30,8 @@ function viewFullImage (data) {
     overlayComments.textContent = image.comments.length;
     overlayDescription.textContent = image.description;
     clearComments(); // очищаем комментарии
-    createComments(image.comments);
+    commentsCounter = 0; // обнуляем переменную, чтобы счетчик комментариев не накапливался
+    createComments(image.comments); // создаем комментарии
     document.addEventListener('keydown', onOverlayEscKeydown); // добавляем обработчик на закрытие окна по кнопке Esc
     overlayCloseButton.addEventListener('click', closeOverlay); // добавляем обработчик на закрытие оверлея по клику
   }
@@ -58,7 +60,7 @@ function viewFullImage (data) {
   }
 
   // функция создания комментариев
-  function createAllComments (comments) {
+  function createAllComments (comments, totalComments) {
     const templateFragment = document.querySelector('#comment').content; // шаблон комментария (фрагмент)
     const template = templateFragment.querySelector('.social__comment'); // весь шаблон комментария
     const fragment = document.createDocumentFragment(); // создаем область document fragment
@@ -72,22 +74,26 @@ function viewFullImage (data) {
       templateText.textContent = element.message; // текст комментария
 
       fragment.appendChild(templateElement); // добавляем элемент в document fragment
+      commentsCounter++; // увеличиваем счетчик окмментария
     });
+
     commentsContainer.appendChild(fragment); // добавляем document fragment в разметку
+    commentsCount.textContent = `${commentsCounter} из ${totalComments} комментариев`;
   }
 
   // функция отображения комментариев
   function createComments (comments) {
     const commentsArrayCopy = comments.slice();
+    const totalComments = comments.length;
 
     if (commentsArrayCopy.length <= 5) {
-      createAllComments(commentsArrayCopy);
+      createAllComments(commentsArrayCopy, totalComments);
       commentsLoader.classList.add('hidden');
       return;
     }
 
     addDefiniteComments = function createDefiniteComments () {
-      createAllComments(commentsArrayCopy.splice(0, 5));
+      createAllComments(commentsArrayCopy.splice(0, 5), totalComments);
 
       if (commentsArrayCopy.length === 0) {
         commentsLoader.classList.add('hidden');
@@ -95,18 +101,19 @@ function viewFullImage (data) {
       }
     };
 
-    createAllComments(commentsArrayCopy.splice(0, 5));
+    createAllComments(commentsArrayCopy.splice(0, 5), totalComments);
     commentsLoader.classList.remove('hidden');
     commentsLoader.addEventListener('click', addDefiniteComments); // добавляем обработчик на кнопку загрузки комментариев
+
   }
 
   // обработчик событий на открытие оверлея
   picturesContainer.addEventListener('click', (evt) => {
     if (evt.target.dataset.id) { // создаем обработчик только для тех элементов родителя, которые имеют атрибут data-id
       evt.preventDefault(); // убираем действие по умолчанию, чтобы при клике браузер не перекидывал в начало страницы
-      const id = evt.target.dataset.id;
-      const image = data.find((item) => +id === item.id);
-      openOverlay(image);
+      const id = evt.target.dataset.id; // создаем переменную, куда записываем значение data атрибута
+      const image = data.find((item) => +id === item.id); // если в массиве данных найдется такое же значение ключа id, что и в data-id, то приравниваем их
+      openOverlay(image); // таким образом, находим одинаковые data-id в разметке, и id в массиве, и через функцию openOverlay отображаем данные
     }
   });
 }

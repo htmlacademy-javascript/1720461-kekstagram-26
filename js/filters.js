@@ -41,8 +41,8 @@ function applyFilter () {
     const template = templateFragment.querySelector('.picture'); // весь шаблон
     const fragment = document.createDocumentFragment(); // создаем область document fragment
 
-    const imagesTodelete = document.querySelectorAll('.picture');
-    imagesTodelete.forEach((image) => image.remove());
+    const imagesToDelete = document.querySelectorAll('.picture');
+    imagesToDelete.forEach((image) => image.remove());
 
     for (let i = 0; i < imagesArray.length; i++) {
       const templateElement = template.cloneNode(true); // копируем новый элемент из шаблона
@@ -78,8 +78,8 @@ function applyFilter () {
     const template = templateFragment.querySelector('.picture'); // весь шаблон
     const fragment = document.createDocumentFragment(); // создаем область document fragment
 
-    const imagesTodelete = document.querySelectorAll('.picture'); // выберем все элементы для удаления
-    imagesTodelete.forEach((image) => image.remove()); // проитерируемся и для каждого элемента применим метод remove
+    const imagesToDelete = document.querySelectorAll('.picture'); // выберем все элементы для удаления
+    imagesToDelete.forEach((image) => image.remove()); // проитерируемся и для каждого элемента применим метод remove
 
     for (let i = 0; i < imagesArray.length; i++) {
       const templateElement = template.cloneNode(true); // копируем новый элемент из шаблона
@@ -100,25 +100,26 @@ function applyFilter () {
     imagesContainer.appendChild(fragment); // добавляем document fragment в разметку
   }
 
-
-  filtersContainer.addEventListener('click', (evt) => {
-    //debounce(() => {}, 500);
-
+  // функция, которая пойдет в обработчик клика
+  function filterHandler (evt) {
     evt.preventDefault();
-    if (evt.target.id === 'filter-default') {
-      applyCSSStylesToActiveFilter(evt);
-      getData(createImages, showInfoMessage);
+    switch (evt.target.id) {
+      case 'filter-discussed':
+        applyCSSStylesToActiveFilter(evt);
+        getData(applyFilterDiscussed, showInfoMessage);
+        break;
+      case 'filter-random':
+        applyCSSStylesToActiveFilter(evt);
+        getData(applyFilterRandom, showInfoMessage);
+        break;
+      case 'filter-default':
+      default:
+        applyCSSStylesToActiveFilter(evt);
+        getData(createImages, showInfoMessage);
     }
-    if (evt.target.id === 'filter-random') {
-      applyCSSStylesToActiveFilter(evt);
-      //debounce(() => getData(applyFilterRandom, showInfoMessage), 500);
-      getData(applyFilterRandom, showInfoMessage);
-    }
-    if (evt.target.id === 'filter-discussed') {
-      applyCSSStylesToActiveFilter(evt);
-      getData(applyFilterDiscussed, showInfoMessage);
-    }
-  });
+  }
+
+  filtersContainer.addEventListener('click', debounce((evt) => filterHandler (evt), 500));
 }
 
 
