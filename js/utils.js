@@ -1,3 +1,7 @@
+// константы
+const TIME_DELAY = 4000;
+
+
 // функция выбирает случайное число из заданного диапазона
 function getRandomNumber(minNumber, maxNumber) {
   if (minNumber >= 0 && maxNumber >= 0) {
@@ -39,7 +43,6 @@ function showSuccessMessage () {
 
 // функция отображения информационного сообщения в случае ошибки загрузки данных
 function showInfoMessage () {
-  const TIME_DELAY = 4000;
   const messageContainer = document.createElement('div');
 
   messageContainer.style.zIndex = '10';

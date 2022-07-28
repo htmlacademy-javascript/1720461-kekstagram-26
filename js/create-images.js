@@ -28,8 +28,6 @@ function createImages (images) {
   }
 
   imagesContainer.appendChild(fragment); // добавляем document fragment в разметку
-
-  return imagesContainer;
 }
 
 

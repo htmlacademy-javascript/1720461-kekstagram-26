@@ -1,3 +1,7 @@
+// константы
+const MAX_COMMENTS = 5; // создаем переменную с максимальным количеством комментариев, которые можно отобразить за раз
+
+
 // функция полноэкранного просмотра фото
 function viewFullImage (data) {
 
@@ -83,7 +87,6 @@ function viewFullImage (data) {
 
   // функция отображения комментариев
   function createComments (comments) {
-    const MAX_COMMENTS = 5; // создаем переменную с максимальным количеством комментариев, которые можно отобразить за раз
     const totalComments = comments.length; // записываем общее количество комментариев в переменную
     const commentsArrayCopy = comments.slice(); // создаем копию массива
 

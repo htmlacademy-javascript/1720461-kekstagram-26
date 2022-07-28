@@ -4,6 +4,11 @@ import {chooseEffects, deleteSlider} from './effects.js';
 import {sendData} from './network.js';
 
 
+// константы
+const MAX_CHARACTERS_COUNT = 140; // зададим максимальное количество символов
+const MAX_HASHTAGS_COUNT = 5; // зададим максимальное количество хештегов
+
+
 // селекторы для открытия и закрытия модального окна
 const form = document.querySelector('.img-upload__form'); // селектор на всю форму
 const formUploadInput = form.querySelector('#upload-file'); // инпут загрузки нового файла
@@ -98,13 +103,8 @@ function validateForm () {
 
   // функция валидации поля "Хештег", не более 5 элементов
   function isNoMoreThanFiveElements (value) {
-    const MAX_HASHTAGS_COUNT = 5; // зададим максимальное количество хештегов
     const hashTagsArray = value.trim().split(' '); // создаем из набора хештегов массив, для подсчета количества хештегов
-    if (hashTagsArray.length <= MAX_HASHTAGS_COUNT) {
-      return true;
-    } else {
-      return false;
-    }
+    return hashTagsArray.length <= MAX_HASHTAGS_COUNT;
   }
 
   // функция валидации поля "Хештег", без повторяющихся элементов
@@ -112,16 +112,11 @@ function validateForm () {
     value = String(value).toLowerCase(); // приводим входные данные к одному регистру
     const hashTagsArray = value.trim().split(' '); // создаем из набора хештегов массив, для подсчета количества хештегов
     const set = new Set(hashTagsArray);
-    if (set.size === hashTagsArray.length) {
-      return true;
-    } else {
-      return false;
-    }
+    return set.size === hashTagsArray.length;
   }
 
   // функция валидации поля "Комментарий"
   function validateCommentMaxLength(value) {
-    const MAX_CHARACTERS_COUNT = 140;
     return value.length <= MAX_CHARACTERS_COUNT; // добавляем условие и возвращаем булево значение
   }
 
@@ -141,7 +136,7 @@ function validateForm () {
         () => {
           showSuccessMessage();
           closeModal();
-          submitButton.disabled = false;
+          submitButton.disabled = false; // снимаем блокировку кнопки
 
           const successMessage = document.querySelector('.success');
           const successMessageCloseButton = document.querySelector('.success__button');
@@ -156,7 +151,7 @@ function validateForm () {
 
         () => {
           showErrorMessage();
-          submitButton.disabled = false;
+          submitButton.disabled = false; // снимаем блокировку кнопки
           formModal.classList.add('hidden'); // скрываем модальное окно
 
           const errorMessage = document.querySelector('.error');

@@ -3,6 +3,11 @@ import {createImages} from './create-images.js';
 import {getData} from './network.js';
 
 
+// константы
+const RANDOM_IMAGES_COUNT = 10; // количество случайно выбранных фото
+const TIME_DELAY_FOR_DEBOUNCE = 500; // временная задержка для устранения дребезга
+
+
 // функция применения фильтра
 function applyFilter () {
   const filtersElement = document.querySelector('.img-filters');
@@ -30,79 +35,27 @@ function applyFilter () {
     return CommentsCountB - CommentsCountA;
   }
 
-  // функция применения фильтра обсуждаемых фото
-  function applyFilterDiscussed (images) {
-    const imagesArray = images.slice();
-
-    imagesArray.sort(compareCommentsCount);
-
-    const imagesContainer = document.querySelector('.pictures'); // контейнер для фото
-    const templateFragment = document.querySelector('#picture').content; // шаблон (фрагмент)
-    const template = templateFragment.querySelector('.picture'); // весь шаблон
-    const fragment = document.createDocumentFragment(); // создаем область document fragment
-
-    const imagesToDelete = document.querySelectorAll('.picture');
-    imagesToDelete.forEach((image) => image.remove());
-
-    for (let i = 0; i < imagesArray.length; i++) {
-      const templateElement = template.cloneNode(true); // копируем новый элемент из шаблона
-      const templateImage = templateElement.querySelector('.picture__img'); // доступ к тегу img
-      const templateDescription = templateElement.querySelector('.picture__img'); // описание
-      const templateComments = templateElement.querySelector('.picture__comments'); // количество комментариев
-      const templateLikes = templateElement.querySelector('.picture__likes'); // количество лайков
-
-      templateImage.src += imagesArray[i].url; // присваиваем значение пути (url) до картинки
-      templateComments.textContent = imagesArray[i].comments.length; // присваиваем значение количества комментариев
-      templateLikes.textContent = imagesArray[i].likes; // присваиваем значение количества лайков
-      templateDescription.alt = imagesArray[i].description; // присваиваем значение описания
-      templateImage.dataset.id = imagesArray[i].id; // создаем data-атрибут id и присваиваем значение
-
-      fragment.appendChild(templateElement); // добавляем элемент в document fragment
-    }
-
-    imagesContainer.appendChild(fragment); // добавляем document fragment в разметку
-  }
-
   // функция применения фильтра случайных фото
   function applyFilterRandom (images) {
-    const RANDOM_IMAGES_COUNT= 10;
     const imagesArrayFull = images.slice(); // создаем копию массива
 
     const set = new Set(); // создаем новый экземпляр сета для ситуации, когда рандомизатор выберет 2 одинаковых числа
     while (set.size < RANDOM_IMAGES_COUNT) { // итерируемся, пока не наберется 10 элементов
       set.add(getRandomArrayElement(imagesArrayFull)); // добавляем рандомный элемент в сет
     }
-    const imagesArray = Array.from(set); // превращаем сет в массив с помощью Array.from
+    const filteredPhotos = Array.from(set); // превращаем сет в массив с помощью Array.from
+    createImages(filteredPhotos); // передаем получившийся массив в функцию отрисовки фото
+  }
 
-    const imagesContainer = document.querySelector('.pictures'); // контейнер для фото
-    const templateFragment = document.querySelector('#picture').content; // шаблон (фрагмент)
-    const template = templateFragment.querySelector('.picture'); // весь шаблон
-    const fragment = document.createDocumentFragment(); // создаем область document fragment
-
-    const imagesToDelete = document.querySelectorAll('.picture'); // выберем все элементы для удаления
-    imagesToDelete.forEach((image) => image.remove()); // проитерируемся и для каждого элемента применим метод remove
-
-    for (let i = 0; i < imagesArray.length; i++) {
-      const templateElement = template.cloneNode(true); // копируем новый элемент из шаблона
-      const templateImage = templateElement.querySelector('.picture__img'); // доступ к тегу img
-      const templateDescription = templateElement.querySelector('.picture__img'); // описание
-      const templateComments = templateElement.querySelector('.picture__comments'); // количество комментариев
-      const templateLikes = templateElement.querySelector('.picture__likes'); // количество лайков
-
-      templateImage.src += imagesArray[i].url; // присваиваем значение пути (url) до картинки
-      templateComments.textContent = imagesArray[i].comments.length; // присваиваем значение количества комментариев
-      templateLikes.textContent = imagesArray[i].likes; // присваиваем значение количества лайков
-      templateDescription.alt = imagesArray[i].description; // присваиваем значение описания
-      templateImage.dataset.id = imagesArray[i].id; // создаем data-атрибут id и присваиваем значение
-
-      fragment.appendChild(templateElement); // добавляем элемент в document fragment
-    }
-
-    imagesContainer.appendChild(fragment); // добавляем document fragment в разметку
+  // функция применения фильтра обсуждаемых фото
+  function applyFilterDiscussed (images) {
+    const imagesArray = images.slice();
+    const filteredPhotos = imagesArray.sort(compareCommentsCount); // сортируем по убыванию с помощью функции сравнения
+    createImages(filteredPhotos); // передаем получившийся массив в функцию отрисовки фото
   }
 
   // функция, которая пойдет в обработчик клика
-  function filterHandler (evt) {
+  function onFilterClick (evt) {
     evt.preventDefault();
     switch (evt.target.id) {
       case 'filter-discussed':
@@ -120,7 +73,7 @@ function applyFilter () {
     }
   }
 
-  filtersContainer.addEventListener('click', debounce((evt) => filterHandler (evt), 500));
+  filtersContainer.addEventListener('click', debounce((evt) => onFilterClick (evt), TIME_DELAY_FOR_DEBOUNCE));
 }
 
 

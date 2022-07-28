@@ -1,3 +1,9 @@
+// константы
+const SCALE_MIN = 0.25; // зададим минимальный размер масштаба
+const SCALE_MAX = 1; // зададим максимальный размер масштаба
+const SCALE_STEP = 0.25; // зададим шаг масштабирования
+
+
 // селекторы на необходимые элементы
 const imagePreview = document.querySelector('.img-upload__preview img'); // селектор на масштабируемое изображение
 const scale = document.querySelector('.img-upload__scale'); // селектор на весь элемент масштаба
@@ -10,10 +16,7 @@ let onBiggerScaleButtonClick = null; // здесь будет функция inc
 
 // функция, отвечающая за изменение масштаба
 function changeScale () {
-  const SCALE_MIN = 0.25; // зададим минимальный размер масштаба
-  const SCALE_MAX = 1; // зададим максимальный размер масштаба
-  const SCALE_STEP = 0.25; // зададим шаг масштабирования
-  let scaleCurrent = 1; // и переменную для текущего масштаба
+  let scaleCurrent = 1; // зададим переменную для текущего масштаба
 
   scaleField.value = '100%'; // сбросим значение поля на значение по-умолчанию
   imagePreview.style.transform = 'scale(1)'; // сбросим значение на значение по-умолчанию
