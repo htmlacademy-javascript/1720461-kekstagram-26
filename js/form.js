@@ -10,6 +10,7 @@ const formUploadInput = form.querySelector('#upload-file'); // инпут заг
 const formModal = form.querySelector('.img-upload__overlay'); // модальное окно редактирования загруженного изображения
 const formCloseButton = form.querySelector('.img-upload__cancel'); // кнопка закрытия модального окна
 
+
 // селекторы для валидации формы
 const hashTagInput = form.querySelector('.text__hashtags'); // текстовое поле "Хештег"
 const commentInput = form.querySelector('.text__description'); // текстовое поле "Комментарий"
@@ -97,8 +98,9 @@ function validateForm () {
 
   // функция валидации поля "Хештег", не более 5 элементов
   function isNoMoreThanFiveElements (value) {
+    const MAX_HASHTAGS_COUNT = 5; // зададим максимальное количество хештегов
     const hashTagsArray = value.trim().split(' '); // создаем из набора хештегов массив, для подсчета количества хештегов
-    if (hashTagsArray.length <= 5) {
+    if (hashTagsArray.length <= MAX_HASHTAGS_COUNT) {
       return true;
     } else {
       return false;
@@ -119,7 +121,8 @@ function validateForm () {
 
   // функция валидации поля "Комментарий"
   function validateCommentMaxLength(value) {
-    return value.length <= 140; // добавляем условие и возвращаем значение
+    const MAX_CHARACTERS_COUNT = 140;
+    return value.length <= MAX_CHARACTERS_COUNT; // добавляем условие и возвращаем булево значение
   }
 
   // добавляем валидаторы

@@ -39,7 +39,9 @@ function showSuccessMessage () {
 
 // функция отображения информационного сообщения в случае ошибки загрузки данных
 function showInfoMessage () {
+  const TIME_DELAY = 4000;
   const messageContainer = document.createElement('div');
+
   messageContainer.style.zIndex = '10';
   messageContainer.style.position = 'absolute';
   messageContainer.style.left = '0';
@@ -55,7 +57,7 @@ function showInfoMessage () {
 
   setTimeout(() => {
     messageContainer.remove();
-  }, 4000);
+  }, TIME_DELAY);
 }
 
 

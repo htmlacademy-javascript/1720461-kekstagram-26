@@ -10,10 +10,13 @@ let onBiggerScaleButtonClick = null; // здесь будет функция inc
 
 // функция, отвечающая за изменение масштаба
 function changeScale () {
-  const scaleStep = 0.25; // зададим шаг масштабирования
-  let scaleCurrent = 1; // и масштаб по-умолчанию
-  scaleField.value = '100%'; //
-  imagePreview.style.transform = 'scale(1)';
+  const SCALE_MIN = 0.25; // зададим минимальный размер масштаба
+  const SCALE_MAX = 1; // зададим максимальный размер масштаба
+  const SCALE_STEP = 0.25; // зададим шаг масштабирования
+  let scaleCurrent = 1; // и переменную для текущего масштаба
+
+  scaleField.value = '100%'; // сбросим значение поля на значение по-умолчанию
+  imagePreview.style.transform = 'scale(1)'; // сбросим значение на значение по-умолчанию
 
   // функция расчета масштаба
   function scaleTransform () { // выведем часть вычислений в отдельную функцию, т.к. эти вычисления повторяются
@@ -23,15 +26,15 @@ function changeScale () {
   }
 
   onSmallerScaleButtonClick = function decreaseScale () { // создадим функцию расчета для кнопки уменьшения масштаба
-    if (scaleCurrent > 0.25) { // уменьшаем масштаб, пока текущий не меньше 25%
-      scaleCurrent -= scaleStep;
+    if (scaleCurrent > SCALE_MIN) { // уменьшаем масштаб, пока текущий не меньше 25%
+      scaleCurrent -= SCALE_STEP;
       scaleTransform();
     }
   };
 
   onBiggerScaleButtonClick = function increaseScale () { // создадим функцию расчета для кнопки увеличения масштаба
-    if (scaleCurrent < 1) { // увеличиваем масштаб, пока текущий не больше 100%
-      scaleCurrent += scaleStep;
+    if (scaleCurrent < SCALE_MAX) { // увеличиваем масштаб, пока текущий не больше 100%
+      scaleCurrent += SCALE_STEP;
       scaleTransform();
     }
   };

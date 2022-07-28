@@ -8,8 +8,8 @@ function createImages (images) {
   const template = templateFragment.querySelector('.picture'); // весь шаблон
   const fragment = document.createDocumentFragment(); // создаем область document fragment
 
-  const imagesTodelete = document.querySelectorAll('.picture');
-  imagesTodelete.forEach((image) => image.remove());
+  const imagesToDelete = document.querySelectorAll('.picture');
+  imagesToDelete.forEach((image) => image.remove());
 
   for (let i = 0; i < imagesArray.length; i++) {
     const templateElement = template.cloneNode(true); // копируем новый элемент из шаблона

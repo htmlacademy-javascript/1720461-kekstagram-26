@@ -65,10 +65,11 @@ function applyFilter () {
 
   // функция применения фильтра случайных фото
   function applyFilterRandom (images) {
+    const RANDOM_IMAGES_COUNT= 10;
     const imagesArrayFull = images.slice(); // создаем копию массива
 
     const set = new Set(); // создаем новый экземпляр сета для ситуации, когда рандомизатор выберет 2 одинаковых числа
-    while (set.size < 10) { // итерируемся, пока не наберется 10 элементов
+    while (set.size < RANDOM_IMAGES_COUNT) { // итерируемся, пока не наберется 10 элементов
       set.add(getRandomArrayElement(imagesArrayFull)); // добавляем рандомный элемент в сет
     }
     const imagesArray = Array.from(set); // превращаем сет в массив с помощью Array.from
