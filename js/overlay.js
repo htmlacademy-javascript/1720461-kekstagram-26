@@ -1,3 +1,7 @@
+// константы
+const MAX_COMMENTS = 5; // создаем переменную с максимальным количеством комментариев, которые можно отобразить за раз
+
+
 // функция полноэкранного просмотра фото
 function viewFullImage (data) {
 
@@ -74,37 +78,36 @@ function viewFullImage (data) {
       templateText.textContent = element.message; // текст комментария
 
       fragment.appendChild(templateElement); // добавляем элемент в document fragment
-      commentsCounter++; // увеличиваем счетчик окмментария
+      commentsCounter++; // увеличиваем счетчик комментария
     });
 
     commentsContainer.appendChild(fragment); // добавляем document fragment в разметку
-    commentsCount.textContent = `${commentsCounter} из ${totalComments} комментариев`;
+    commentsCount.textContent = `${commentsCounter} из ${totalComments} комментариев`; // показываем пользователю сколько комментариев загружено и сколько всего
   }
 
   // функция отображения комментариев
   function createComments (comments) {
-    const commentsArrayCopy = comments.slice();
-    const totalComments = comments.length;
+    const totalComments = comments.length; // записываем общее количество комментариев в переменную
+    const commentsArrayCopy = comments.slice(); // создаем копию массива
 
-    if (commentsArrayCopy.length <= 5) {
-      createAllComments(commentsArrayCopy, totalComments);
-      commentsLoader.classList.add('hidden');
+    if (commentsArrayCopy.length <= MAX_COMMENTS) { // если комментариев 5 или меньше
+      createAllComments(commentsArrayCopy, totalComments); // отрисовываем весь массив комментариев
+      commentsLoader.classList.add('hidden'); // скрываем кнопку загрузки доп комментариев
       return;
     }
 
-    addDefiniteComments = function createDefiniteComments () {
-      createAllComments(commentsArrayCopy.splice(0, 5), totalComments);
+    addDefiniteComments = function createDefiniteComments () { // функция для обработчика
+      createAllComments(commentsArrayCopy.splice(0, MAX_COMMENTS), totalComments); // при нажатии кнопки, отрезаем из массива 5 комментариев и отрисовываем их
 
-      if (commentsArrayCopy.length === 0) {
-        commentsLoader.classList.add('hidden');
-        commentsLoader.removeEventListener('click', addDefiniteComments); // убираем обработчик на кнопку загрузки комментариев
+      if (commentsArrayCopy.length === 0) { // если комментариев не осталось
+        commentsLoader.classList.add('hidden'); // скрываем кнопку загрузки
+        commentsLoader.removeEventListener('click', addDefiniteComments); // убираем обработчик на кнопке загрузки комментариев
       }
     };
 
-    createAllComments(commentsArrayCopy.splice(0, 5), totalComments);
-    commentsLoader.classList.remove('hidden');
+    createAllComments(commentsArrayCopy.splice(0, MAX_COMMENTS), totalComments); // если никакое условие не подошло, отрезаем 5 комментариев и отрисовываем их
+    commentsLoader.classList.remove('hidden'); // скрываем кнопку загрузки
     commentsLoader.addEventListener('click', addDefiniteComments); // добавляем обработчик на кнопку загрузки комментариев
-
   }
 
   // обработчик событий на открытие оверлея
